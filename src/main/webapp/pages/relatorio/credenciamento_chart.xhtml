@@ -1,0 +1,118 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/pages/template/principal.xhtml">
+
+    <ui:define name="content">
+        <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+        <script>
+            function limparPontos() {
+                var elmtsArray = document.getElementsByClassName("jqplot-point-label");
+                for (var i = 0; i &lt; elmtsArray.length; i++) {
+                    if (elmtsArray[i].innerHTML == '-') {
+                        elmtsArray[i].style.display = 'none';
+                    }
+                }
+            }
+        </script>
+        <div class="ContainerIndent">
+            <h:form id="form">
+                <p:panel>
+                    <div class="Container100 Responsive">
+                        <div class="ContainerIndent TexAlCenter">
+                            <h:outputText value="Índice Credênciamento"
+                                          styleClass="FontBold Fs18 hardblue"></h:outputText>
+                        </div>
+                        <p:messages showDetail="false" autoUpdate="true" closable="true"/>
+                    </div>
+                    <div class="Container100 Responsive">
+                        <div class="ContainerIndent">
+                            <p/>
+                            <p:fieldset styleClass="Responsive">
+                                <h:panelGrid columns="6" cellpadding="5">
+                                    <p:outputLabel value="Ano: " for="ano"/>
+
+                                    <p:selectOneMenu id="ano" style="width:125px"
+                                                     value="#{credenciamentoChartView.ano}">
+                                        <f:selectItem itemLabel="Selecione" itemValue=""/>
+                                        <f:selectItem itemLabel="2014" itemValue="2014"/>
+                                        <f:selectItem itemLabel="2015" itemValue="2015"/>
+                                        <f:selectItem itemLabel="2016" itemValue="2016"/>
+
+                                        <p:ajax event="change" update="@form"
+                                                listener="#{credenciamentoChartView.createIndiceCredenciamento}"
+                                                oncomplete="limparPontos()"/>
+                                    </p:selectOneMenu>
+
+                                </h:panelGrid>
+                            </p:fieldset>
+
+                            <p/>
+                            <p:fieldset styleClass="Responsive" legend="Gráfico Credenciamento"
+                                        rendered="#{credenciamentoChartView.indiceCred ne null}">
+                                <h:panelGrid id="pnl" columns="6" cellpadding="5" styleClass="Container70">
+
+                                    <p:chart type="bar" model="#{credenciamentoChartView.indiceCred}"
+                                             style="width:100%; cursor: pointer" responsive="true">
+                                        <p:ajax event="itemSelect" listener="#{credenciamentoChartView.itemSelect}"
+                                                update="@form" oncomplete="limparPontos()"/>
+                                    </p:chart>
+                                </h:panelGrid>
+                                <p:outputLabel
+                                        value="Selecione um resultado no gráfico para visualizar os detalhes dos credenciamentos"
+                                        style="margin-left: 37%; text-decoration: underline; color: #0047EC"/>
+                            </p:fieldset>
+                            <p/>
+                            <p:fieldset legend="#{label['credenciamento.credenciadas']}"
+                                        rendered="#{credenciamentoChartView.lista.size() > 0}"
+                                        styleClass="Responsive" toggleable="true">
+                                <h:panelGrid id="pnl2" styleClass="Container80">
+                                    <p:dataTable id="singleDT" var="cred"
+                                                 value="#{credenciamentoChartView.lista}" rowKey="#{cred.id}" rows="10"
+                                                 paginator="#{credenciamentoChartView.lista.size() > 10}"
+                                                 paginatorPosition="bottom"
+                                                 emptyMessage="#{label['emptyMessage']}" reflow="true">
+
+                                        <p:column headerText="#{label['id']}" sortBy="#{cred.id}"
+                                                  style="width:40px" styleClass="TexAlCenter">
+                                            <h:outputText value="#{cred.id}"/>
+                                        </p:column>
+
+                                        <p:column headerText="#{label['desmonte.razaoSocial']}"
+                                                  sortBy="#{cred.solicitacao.credenciada.razaoSocial}">
+                                            <h:outputText value="#{cred.solicitacao.credenciada.razaoSocial}"/>
+                                        </p:column>
+                                        <p:column headerText="#{label['desmonte.cnpj']}"
+                                                  sortBy="#{cred.solicitacao.credenciada.cnpj}"
+                                                  styleClass="TexAlCenter Wid150px">
+                                            <h:outputText value="#{cred.solicitacao.credenciada.cnpj}"
+                                                          converter="#{cgcCpfConverter}"/>
+                                        </p:column>
+                                        <p:column headerText="#{label['credenciamento.tipo']}"
+                                                  sortBy="#{cred.solicitacao.tipoCredenciamento}">
+                                            <h:outputText value="#{cred.solicitacao.tipoCredenciamento.descricao}"/>
+                                        </p:column>
+                                        <p:column headerText="#{label['desmonte.cidadeEstado']}"
+                                                  sortBy="#{cred.solicitacao.credenciada.endereco.cidade.nome}"
+                                                  styleClass="TexAlCenter Wid200px">
+                                            <h:outputText
+                                                    value="#{cred.solicitacao.credenciada.endereco.cidade.nome} - #{cred.solicitacao.credenciada.endereco.cidade.estado.nome}"/>
+                                        </p:column>
+                                        <p:column headerText="#{label['credenciamento.validade']}"
+                                                  sortBy="#{cred.dataValidadeCred}" styleClass="TexAlCenter Wid150px">
+                                            <h:outputText value="#{cred.dataValidadeCred}">
+                                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                            </h:outputText>
+                                        </p:column>
+                                    </p:dataTable>
+                                </h:panelGrid>
+                            </p:fieldset>
+                        </div>
+                    </div>
+                </p:panel>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

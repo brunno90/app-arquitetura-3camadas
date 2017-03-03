@@ -1,0 +1,176 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panel>
+        <div class="Container100 Responsive">
+            <div class="ContainerIndent TexAlCenter">
+                <h:outputText value="#{label['laudo.laudoTecnicoComplementar']}"
+                              styleClass="FontBold Fs18 hardblue"></h:outputText>
+            </div>
+            <p:messages showDetail="false" autoUpdate="true" closable="true"/>
+        </div>
+        <div class="Container100 Responsive">
+            <div class="ContainerIndent">
+                <p:messages autoUpdate="true" closable="true"/>
+
+                <p:fieldset legend="#{label['laudo.dadosLaudoTecnico']}"
+                            toggleable="true">
+                    <h:panelGrid columns="6" cellpadding="5">
+                        <p:outputLabel value="#{label['laudo.numeroRelatorio']}"/>
+                        <p:inputText value="#{laudoTecnicoView.entidade.numLaudoTecnico}"
+                                     required="true" disabled="true"
+                                     requiredMessage="Número do Laudo Técnico não pode ser nulo"/>
+                        <p:outputLabel value="#{label['situacao']}"/>
+
+                        <p:selectOneMenu id="idSituacaoLaudoTecnico" style="width:125px" disabled="true"
+                                         value="#{laudoTecnicoView.entidade.situacao}">
+                            <f:selectItems
+                                    value="#{laudoTecnicoView.situacaoLaudoTecnicoEnum}"
+                                    var="situacao" itemLabel="#{situacao.descricao}"
+                                    itemValue="#{situacao}"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="#{label['laudo.dataDesmonte']}"
+                                       for="idDesmonteDataVisualizar"/>
+                        <p:calendar id="idDesmonteDataVisualizar" disabled="true"
+                                    value="#{laudoTecnicoView.entidade.dataDesmonte}" locale="pt_BR"
+                                    pattern="dd/MM/yyyy" showOn="button"/>
+
+                        <p:outputLabel value="#{label['laudo.responsavelTecnico']}"/>
+                        <p:inputText
+                                value="#{laudoTecnicoView.entidade.responsavel.pessoa.nome}"
+                                disabled="true"/>
+
+                        <p:outputLabel value="#{label['laudo.cpfResponsavel']}"/>
+                        <p:inputMask mask="999.999.999-99"
+                                     value="#{laudoTecnicoView.entidade.responsavel.pessoa.cpf}"
+                                     converter="#{cgcCpfConverter}" disabled="true"/>
+
+                    </h:panelGrid>
+                </p:fieldset>
+
+                <p/>
+                <p:fieldset legend="#{label['veiculo.dados']}" toggleable="true">
+                    <h:panelGrid columns="6" cellpadding="5">
+
+                        <p:outputLabel value="#{label['veiculo.renavam']}: "/>
+                        <p:inputText value="#{laudoTecnicoView.entidade.veiculo.renavam}"
+                                     disabled="true"/>
+                        <p:outputLabel value="#{label['veiculo.codBaixaRenavam']}: "/>
+                        <p:inputText
+                                value="#{laudoTecnicoView.entidade.veiculo.codBaixaRenavam}"
+                                disabled="true"/>
+                        <p:outputLabel value="#{label['veiculo.dataBaixaRenavam']}: "
+                                       for="idDataBaixaVisualizar"/>
+                        <p:inputMask id="idDataBaixaVisualizar"
+                                     value="#{laudoTecnicoView.entidade.veiculo.dataBaixaRenavam}"
+                                     mask="99/99/9999" disabled="true">
+                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                        </p:inputMask>
+                        <p:outputLabel value="#{label['veiculo.placa']}: "/>
+                        <p:inputText value="#{laudoTecnicoView.entidade.veiculo.placa}"
+                                     disabled="true"/>
+                        <p:outputLabel value="#{label['veiculo.numMotor']}: "/>
+                        <p:inputText value="#{laudoTecnicoView.entidade.veiculo.numMotor}"
+                                     disabled="true"/>
+                        <p:outputLabel value="#{label['veiculo.chassi']}: "/>
+                        <p:inputText value="#{laudoTecnicoView.entidade.veiculo.chassis}"
+                                     disabled="true"/>
+                        <p:outputLabel value="#{label['veiculo.marca']}: "/>
+                        <p:inputText
+                                value="#{laudoTecnicoView.entidade.veiculo.modelo.marca.nome}"
+                                disabled="true"/>
+                        <p:outputLabel value="#{label['veiculo.modelo']}: "/>
+                        <p:inputText
+                                value="#{laudoTecnicoView.entidade.veiculo.modelo.nome}"
+                                disabled="true"/>
+                        <p:outputLabel value="#{label['veiculo.cor']}: "/>
+                        <p:inputText value="#{laudoTecnicoView.entidade.veiculo.cor}"
+                                     disabled="true"/>
+                        <p:outputLabel value="#{label['veiculo.anoFabricacao']}: "/>
+                        <p:inputText
+                                value="#{laudoTecnicoView.entidade.veiculo.anoFabricacao}"
+                                disabled="true"/>
+                        <p:outputLabel value="#{label['veiculo.anoModelo']}: "/>
+                        <p:inputText
+                                value="#{laudoTecnicoView.entidade.veiculo.anoModelo}"
+                                disabled="true"/>
+                        <p:outputLabel value="#{label['veiculo.categoria']}: "/>
+                        <p:inputText
+                                value="#{laudoTecnicoView.entidade.veiculo.categoria.descricao}"
+                                disabled="true"/>
+                    </h:panelGrid>
+                </p:fieldset>
+
+                <p/>
+                <p:fieldset legend="#{label['itemPeca.lista']}" toggleable="true">
+
+                    <p:dataTable id="idDataTableItemVisualizar" var="itemPeca"
+                                 rowIndexVar="index" value="#{laudoTecnicoView.listaItensPeca}"
+                                 rowKey="#{itemPeca.id}" rows="15" paginator="true" paginatorPosition="bottom"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                 reflow="true" editable="#{laudoTecnicoView.entidade.laudoCompPendente}" editMode="cell"
+                                 styleClass="Container80">
+
+                        <p:ajax event="cellEdit" update="@this" listener="#{laudoTecnicoView.onCellEdit}"/>
+
+                        <p:column headerText="#" style="width:50px" styleClass="TexAlCenter">
+                            <h:outputText value="#{index + 1}"/>
+                        </p:column>
+
+                        <p:column headerText="#{label['itemPeca.peca']}"
+                                  sortBy="#{itemPeca.pecaRastreabilidade.nome}">
+                            <h:outputText value="#{itemPeca.pecaRastreabilidade.nome}"/>
+                        </p:column>
+
+                        <p:column headerText="#{label['laudo.itemPeca.subSistema']}"
+                                  sortBy="#{itemPeca.pecaRastreabilidade.grupo.nome}">
+                            <h:outputText value="#{itemPeca.pecaRastreabilidade.grupo.nome}"/>
+                        </p:column>
+
+                        <p:column headerText="#{label['situacao']}" styleClass="TexAlCenter">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <p:inputText value="#{itemPeca.situacao}"
+                                                 disabled="#{!laudoTecnicoView.entidade.laudoCompPendente}"
+                                                 styleClass="Container70 Marleft10"/>
+                                    <i class="icon-pencil-1 Fs17"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:selectOneMenu value="#{itemPeca.situacao}"
+                                                     style="width:70% !important;">
+                                        <f:selectItems
+                                                value="#{laudoTecnicoView.listaSituacaoItemPecaEnum}"
+                                                var="tipo" itemLabel="#{tipo}" itemValue="#{tipo}"/>
+                                    </p:selectOneMenu>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+
+                    </p:dataTable>
+                </p:fieldset>
+
+                <p/>
+                <p:fieldset>
+                    <p:commandButton title="#{label['cancelar']}" immediate="true"
+                                     icon="fa icon-cancel Fs16 white" value="#{label['cancelar']}"
+                                     update="@form" style="margin-left:10%" styleClass="redButton">
+                        <pe:selectDetailLevel level="1"/>
+                    </p:commandButton>
+
+                    <p:commandButton title="Gerar Laudo Complementar" immediate="true"
+                                     icon="fa icon-ok Fs16 white" value="Gerar Laudo Complementar"
+                                     update="@form" styleClass="greenButton Fright20"
+                                     rendered="#{laudoTecnicoView.entidade.laudoCompPendente}"
+                                     actionListener="#{laudoTecnicoView.saveLaudoTecnicoComplementar}">
+                        <pe:selectDetailLevel level="1"/>
+                    </p:commandButton>
+                </p:fieldset>
+            </div>
+        </div>
+    </p:panel>
+</ui:composition>

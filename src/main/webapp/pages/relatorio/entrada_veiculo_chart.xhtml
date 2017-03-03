@@ -1,0 +1,133 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/pages/template/principal.xhtml">
+
+    <ui:define name="content">
+        <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+        <script>
+            function limparPontos() {
+                var elmtsArray = document.getElementsByClassName("jqplot-point-label");
+                for (var i = 0; i &lt; elmtsArray.length; i++) {
+                    if (elmtsArray[i].innerHTML == '-') {
+                        elmtsArray[i].style.display = 'none';
+                    }
+                }
+            }
+        </script>
+        <div class="ContainerIndent">
+            <h:form id="form">
+                <p:panel>
+                    <div class="Container100 Responsive">
+                        <div class="ContainerIndent TexAlCenter">
+                            <h:outputText value="Índice Entrada Veículos"
+                                          styleClass="FontBold Fs18 hardblue"></h:outputText>
+                        </div>
+                        <p:messages showDetail="false" autoUpdate="true" closable="true"/>
+                    </div>
+                    <div class="Container100 Responsive">
+                        <div class="ContainerIndent">
+                            <p/>
+                            <p:fieldset styleClass="Responsive">
+                                <h:panelGrid columns="6" cellpadding="5">
+                                    <p:outputLabel value="Ano: " for="ano"/>
+
+                                    <p:selectOneMenu id="ano" style="width:125px"
+                                                     value="#{entradaVeiculoChartView.ano}">
+                                        <f:selectItem itemLabel="Selecione" itemValue=""/>
+                                        <f:selectItem itemLabel="2014" itemValue="2014"/>
+                                        <f:selectItem itemLabel="2015" itemValue="2015"/>
+                                        <f:selectItem itemLabel="2016" itemValue="2016"/>
+
+                                        <p:ajax event="change" update="@form"
+                                                listener="#{entradaVeiculoChartView.createAnimatedModels}"
+                                                oncomplete="limparPontos()"/>
+                                    </p:selectOneMenu>
+
+                                </h:panelGrid>
+                            </p:fieldset>
+
+                            <p/>
+                            <p:fieldset styleClass="Responsive" legend="Gráfico Entrada Veículos"
+                                        rendered="#{entradaVeiculoChartView.animatedModel1 ne null}">
+                                <h:panelGrid id="pnl" columns="2" cellpadding="5" styleClass="Container70">
+
+                                    <p:chart type="bar" model="#{entradaVeiculoChartView.animatedModel1}"
+                                             style="width:100%; cursor: pointer" responsive="true">
+                                        <p:ajax event="itemSelect" listener="#{entradaVeiculoChartView.itemSelect}"
+                                                update="@form"/>
+                                    </p:chart>
+                                </h:panelGrid>
+                                <p:outputLabel
+                                        value="Selecione um resultado no gráfico para visualizar os detalhes dos veículos "
+                                        style="margin-left: 42%; text-decoration: underline; color: #0047EC"/>
+                            </p:fieldset>
+                            <p/>
+                            <p:fieldset legend="#{label['veiculo.lista']}" styleClass="Responsive"
+                                        toggleable="true" rendered="#{entradaVeiculoChartView.lista.size() > 0}">
+                                <h:panelGrid id="pnl2" styleClass="Container80">
+                                    <p:dataTable id="singleDT" var="entrada"
+                                                 value="#{entradaVeiculoChartView.lista}" rows="25" paginator="true"
+                                                 paginatorPosition="bottom" emptyMessage="#{label['emptyMessage']}"
+                                                 reflow="true">
+
+                                        <p:column headerText="#{label['id']}" sortBy="#{veiculo.id}"
+                                                  style="width:40px" styleClass="TexAlCenter">
+                                            <h:outputText value="#{entrada.veiculo.id}"/>
+                                        </p:column>
+
+                                        <p:column headerText="#{label['veiculo.placa']}"
+                                                  sortBy="#{entrada.veiculo.placa}" styleClass="TexAlCenter"
+                                                  style="width:110px">
+                                            <h:outputText value="#{entrada.veiculo.placa}"/>
+                                        </p:column>
+
+                                        <p:column headerText="#{label['veiculo.marca']}"
+                                                  sortBy="#{entrada.veiculo.modelo.marca.nome}">
+                                            <h:outputText value="#{entrada.veiculo.modelo.marca.nome}"/>
+                                        </p:column>
+
+                                        <p:column headerText="#{label['veiculo.modelo']}"
+                                                  sortBy="#{entrada.veiculo.modelo.nome}" style="width:350px">
+                                            <h:outputText value="#{entrada.veiculo.modelo.nome}"/>
+                                        </p:column>
+
+                                        <p:column headerText="#{label['veiculo.cor']}"
+                                                  sortBy="#{entrada.veiculo.cor}" styleClass="TexAlCenter">
+                                            <h:outputText value="#{entrada.veiculo.cor}"/>
+                                        </p:column>
+
+                                        <p:column headerText="#{label['veiculo.codBaixaRenavam']}"
+                                                  sortBy="#{entrada.veiculo.codBaixaRenavam}">
+                                            <h:outputText value="#{entrada.veiculo.codBaixaRenavam}"/>
+                                        </p:column>
+
+                                        <p:column headerText="#{label['veiculo.dataBaixaRenavam']}"
+                                                  sortBy="#{entrada.veiculo.dataBaixaRenavam}"
+                                                  style="text-align: center">
+                                            <h:outputText value="#{entrada.veiculo.dataBaixaRenavam}">
+                                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column style="text-align: center;width:80px;">
+                                            <h:panelGroup rendered="#{entrada.leilao ne null}">
+                                                <i class="icon-hammer-menu Fs15 TexAlCenter green"
+                                                   title="Oriundo de Leilão"/>
+                                            </h:panelGroup>
+                                            <h:panelGroup rendered="#{entrada.veiculo.veiculoDesmontado}">
+                                                <i class="icon-cab Fs15 TexAlCenter yellow"
+                                                   title="Veículo desmontado"/>
+                                            </h:panelGroup>
+                                        </p:column>
+                                    </p:dataTable>
+                                </h:panelGrid>
+                            </p:fieldset>
+                        </div>
+                    </div>
+                </p:panel>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

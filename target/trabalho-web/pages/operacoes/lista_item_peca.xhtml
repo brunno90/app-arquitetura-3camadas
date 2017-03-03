@@ -1,0 +1,88 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <div class="Container100 Responsive">
+        <div class="ContainerIndent">
+            <div class="Container100" id="consulta-box">
+                <p/>
+                <p:fieldset legend="#{label['itemPeca.lista']}">
+                    <div class="Container90 Fnone TexAlCenter TabContent">
+                        <h:panelGrid cellpadding="5">
+
+                            <p:dataTable id="idDataTableItem" var="itemPeca"
+                                         rowIndexVar="index"
+                                         value="#{saidaPecaView.tabelaItemPeca.listItem}"
+                                         selection="#{saidaPecaView.tabelaItemPeca.selectedItem}"
+                                         selectionMode="single" rowKey="#{itemPeca.id}" rows="15"
+                                         paginator="true" paginatorPosition="bottom" reflow="true"
+                                         styleClass="Container90">
+
+                                <f:facet name="header">
+                                </f:facet>
+                                <p:column headerText="#" style="width:50px"
+                                          styleClass="TexAlCenter">
+                                    <h:outputText value="#{index + 1}"/>
+                                </p:column>
+
+                                <p:column headerText="#{label['itemPeca.peca']}"
+                                          sortBy="#{itemPeca.pecaRastreabilidade.nome}">
+                                    <h:outputText value="#{itemPeca.pecaRastreabilidade.nome}"/>
+                                </p:column>
+
+                                <p:column headerText="#{label['laudo.itemPeca.subSistema']}"
+                                          sortBy="#{itemPeca.pecaRastreabilidade.grupo.nome}">
+                                    <h:outputText
+                                            value="#{itemPeca.pecaRastreabilidade.grupo.nome}"/>
+                                </p:column>
+
+                                <p:column headerText="#{label['veiculo.marca']}"
+                                          sortBy="#{itemPeca.veiculo.modelo.marca.nome}">
+                                    <h:outputText value="#{itemPeca.veiculo.modelo.marca.nome}"/>
+                                </p:column>
+
+                                <p:column headerText="#{label['veiculo.modelo']}"
+                                          style="width:250px" sortBy="#{itemPeca.veiculo.modelo}">
+                                    <h:outputText value="#{itemPeca.veiculo.modelo.nome}"/>
+                                </p:column>
+
+                                <p:column headerText="#{label['veiculo.cor']}"
+                                          style="width:100px" sortBy="#{itemPeca.veiculo.cor}">
+                                    <h:outputText value="#{itemPeca.veiculo.cor}"/>
+                                </p:column>
+
+                                <p:column headerText="#{label['veiculo.anoModelo']}"
+                                          sortBy="#{itemPeca.veiculo.anoModelo}">
+                                    <h:outputText value="#{itemPeca.veiculo.anoModelo}"/>
+                                </p:column>
+
+                                <p:column headerText="#{label['acoes']}">
+                                    <p:commandLink title="#{label['adicionar']}" immediate="true"
+                                                   actionListener="#{saidaPecaView.selecionarItemPeca(itemPeca)}"
+                                                   styleClass="ui-btn Fs15 default-color"
+                                                   update="@form">
+                                        <i class="icon-plus Fs17 green"></i>
+                                        <f:setPropertyActionListener
+                                                target="#{saidaPecaView.notaFiscal}"
+                                                value="#{saidaPecaView.notaFiscal}"/>
+                                        <pe:selectDetailLevel level="2"/>
+                                    </p:commandLink>
+                                </p:column>
+
+                            </p:dataTable>
+                            <p:commandButton title="#{label['cancelar']}" immediate="true"
+                                             action="#{saidaPecaView.cancelar()}"
+                                             icon="fa icon-cancel Fs16 white" value="#{label['cancelar']}"
+                                             update="@all" style="margin-left:10%">
+                                <pe:selectDetailLevel level="2"/>
+                            </p:commandButton>
+                        </h:panelGrid>
+                    </div>
+                </p:fieldset>
+            </div>
+        </div>
+    </div>
+</ui:composition>

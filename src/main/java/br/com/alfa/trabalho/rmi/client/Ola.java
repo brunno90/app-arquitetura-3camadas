@@ -1,0 +1,11 @@
+package br.com.alfa.trabalho.rmi.client;
+
+/**
+ * Created by Brunno on 03/03/2017.
+ */
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+public interface Ola extends Remote {
+    String showMsg(String msg) throws
+            RemoteException;
+}

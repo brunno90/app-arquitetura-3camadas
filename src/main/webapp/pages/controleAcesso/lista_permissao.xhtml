@@ -1,0 +1,85 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+	<p:panel>
+		<div class="Container100 Responsive">
+			<div class="ContainerIndent TexAlCenter">
+				<h:outputText value="#{label['permissao.cadastro']}"
+					styleClass="FontBold Fs18 hardblue"></h:outputText>
+			</div>
+			<p:messages showDetail="false" autoUpdate="true" closable="true" />
+		</div>
+		<div class="Container100 Responsive">
+			<div class="ContainerIndent">
+				<p />
+				<p:fieldset legend="#{label['permissao.lista']}" styleClass="Responsive"
+					toggleable="true">
+
+					<h:form id="formPermi">
+						<p:dataTable id="singleDT" var="permissao"
+							value="#{permissaoView.lista}" rows="20" paginator="true"
+							paginatorPosition="bottom"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+							emptyMessage="#{label['emptyMessage']}" reflow="true">
+
+							<p:column headerText="#{label['id']}" sortBy="#{permissao.id}"
+								style="width:40px" styleClass="TexAlCenter">
+								<h:outputText value="#{permissao.id}" />
+							</p:column>
+							<p:column headerText="Nome" sortBy="#{permissao.nome}"
+								styleClass="Wid20">
+								<h:outputText value="#{permissao.nome}" />
+							</p:column>
+							<p:column headerText="Valor" sortBy="#{permissao.valor}"
+								styleClass="Wid20">
+								<h:outputText value="#{permissao.valor}" />
+							</p:column>
+							<p:column headerText="Descrição" styleClass="Wid60"
+								sortBy="#{permissao.descricao}">
+								<h:outputText value="#{permissao.descricao}" />
+							</p:column>
+							<p:column headerText="#{label['acoes']}"
+								styleClass="TexAlCenter Wid200px">
+								<p:commandLink title="#{label['editar']}" immediate="true"
+									update="@all" styleClass="ui-btn Fs15 default-color">
+									<i class="icon-edit Fs17 hardblue"></i>
+									<pe:selectDetailLevel />
+									<f:setPropertyActionListener target="#{permissaoView.entidade}"
+										value="#{permissao}" />
+								</p:commandLink>
+								<p:commandLink title="#{label['excluir']}" immediate="true"
+									update="@all" action="#{permissaoView.remover}"
+									styleClass="ui-btn Fs15 default-color">
+									<i class="icon-eraser Fs16 red"></i>
+									<f:setPropertyActionListener target="#{permissaoView.entidade}"
+										value="#{permissao}" />
+									<p:confirm header="#{label['remover']}"
+										message="#{label['msg.confirm.remover']}" icon="ui-icon-alert" />
+								</p:commandLink>
+							</p:column>
+							<f:facet name="footer">
+								<p:commandButton title=" #{label['permissao.adicionar']}"
+									icon="fa icon-plus Fs14 white"
+									value=" #{label['permissao.adicionar']}" update="@all"
+									actionListener="#{permissaoView.prepararNovo}">
+									<pe:selectDetailLevel />
+								</p:commandButton>
+							</f:facet>
+						</p:dataTable>
+						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+							<p:commandButton value="#{label['sim']}" type="button"
+								styleClass="ui-confirmdialog-yes" icon="fa icon-ok Fs16 white" />
+							<p:commandButton value="#{label['nao']}" type="button"
+								styleClass="ui-confirmdialog-no"
+								icon="fa icon-cancel Fs16 white" />
+						</p:confirmDialog>
+					</h:form>
+				</p:fieldset>
+			</div>
+		</div>
+	</p:panel>
+</ui:composition>

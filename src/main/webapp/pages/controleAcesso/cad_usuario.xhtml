@@ -1,0 +1,166 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <div class="ContainerIndent">
+        <p:panel>
+            <div class="Container100 Responsive">
+                <div class="ContainerIndent TexAlCenter">
+                    <h:outputText value="#{label['usuario.cadastro']}"
+                                  styleClass="FontBold Fs18 hardblue"></h:outputText>
+                </div>
+                <p:messages showDetail="false" autoUpdate="true" closable="true" escape="false"/>
+            </div>
+            <div class="Container100 Responsive">
+                <div class="ContainerIndent">
+                    <p:fieldset legend="#{label['usuario.cadastro']}"
+                                styleClass="Responsive" id="idFieldsetCad">
+                        <p:fieldset>
+                            <h:panelGrid columns="2" cellpadding="5">
+                                <p:outputLabel value="Tipo Pessoa: " for="tp_pessoa"/>
+                                <p:selectOneMenu id="tp_pessoa" style="margin-left: 35%; width: 77px;"
+                                                 value="#{usuarioView.tipoPessoa}">
+                                    <f:selectItems value="#{usuarioView.tipoPessoa.values()}"
+                                                   var="tipo" itemLabel="#{tipo.name()}" itemValue="#{tipo}"/>
+                                    <p:ajax event="change" listener="#{usuarioView.cleanPessoa}"
+                                            update="idFieldsetCad"></p:ajax>
+                                </p:selectOneMenu>
+                            </h:panelGrid>
+
+                            <h:panelGrid columns="6" cellpadding="5"
+                                         rendered="#{usuarioView.tipoPessoa == 'FISICA'}">
+
+                                <p:outputLabel value="#{label['nome']} :" for="idNome"/>
+                                <p:inputText id="idNome" style="width: 250px"
+                                             value="#{usuarioView.entidade.pessoa.nome}"/>
+
+                                <p:outputLabel value="#{label['pessoa.cpf']} :"/>
+                                <p:inputMask mask="999.999.999-99"
+                                             value="#{usuarioView.entidade.pessoa.cpf}"
+                                             converter="#{cgcCpfConverter}"/>
+
+                                <p:outputLabel value="#{label['pessoa.rg']} :" for="idRg"/>
+                                <p:inputText id="idRg"
+                                             value="#{usuarioView.entidade.pessoa.documento}"/>
+
+                                <p:outputLabel value="#{label['email']} :" for="idEmail"/>
+                                <p:inputText id="idEmail" style="width: 250px"
+                                             value="#{usuarioView.entidade.pessoa.email}"/>
+
+                                <p:outputLabel value="#{label['telefone']} :" for="idTelefone"/>
+                                <p:inputMask mask="(99) 9999-9999?9" id="idTelefone"
+                                             value="#{usuarioView.entidade.pessoa.telefone}" size="16"/>
+
+                                <p:outputLabel value="#{label['pessoa.dataNascimento']} :"/>
+                                <p:calendar value="#{usuarioView.entidade.pessoa.dataNascimento}"
+                                            mask="99/99/9999" locale="pt_BR" pattern="dd/MM/yyyy"
+                                            navigator="true" showOn="button" yearRange="c-100:c+0"/>
+                            </h:panelGrid>
+
+                            <h:panelGrid columns="4" cellpadding="5"
+                                         rendered="#{usuarioView.tipoPessoa == 'JURIDICA'}">
+
+                                <p:outputLabel value="#{label['empresa.cnpj']} :"/>
+                                <p:inputMask mask="99.999.999/9999-99" style="width: 150px"
+                                             value="#{usuarioView.entidade.pessoa.cnpj}"
+                                             converter="#{cgcCpfConverter}"/>
+
+                                <p:outputLabel value="#{label['empresa.razaoSocial']} :"
+                                               for="idRzSocial"/>
+                                <p:inputText id="idRzSocial" style="width: 250px"
+                                             value="#{usuarioView.entidade.pessoa.razaoSocial}"/>
+
+                                <p:outputLabel value="#{label['empresa.nomeFantasia']} :"
+                                               for="idNomeFant"/>
+                                <p:inputText id="idNomeFant" style="width: 250px"
+                                             value="#{usuarioView.entidade.pessoa.nomeFantasia}"/>
+
+                                <p:outputLabel value="#{label['email']} :" for="idEmailJud"/>
+                                <p:inputText id="idEmailJud" style="width: 250px"
+                                             value="#{usuarioView.entidade.pessoa.email}"/>
+
+                                <p:outputLabel value="#{label['empresa.inscricaoEstadual']} :"
+                                               for="idInsc"/>
+                                <p:inputText id="idInsc" style="width: 250px"
+                                             value="#{usuarioView.entidade.pessoa.inscricaoEstadual}"/>
+                            </h:panelGrid>
+                        </p:fieldset>
+
+                        <p/>
+                        <p:fieldset>
+                            <h:panelGrid columns="2" cellpadding="5">
+                                <h:panelGrid columns="6" cellpadding="5">
+
+                                    <p:outputLabel for="idPerfil"
+                                                   value="#{label['usuario.perfil']} :"/>
+
+                                    <p:selectOneMenu id="idPerfil"
+                                                     value="#{usuarioView.entidade.perfil}"
+                                                     converter="#{modelSelectConverter}">
+
+                                        <f:selectItems value="#{usuarioView.listaPerfil}" var="perfil"
+                                                       itemLabel="#{perfil.nome}" itemValue="#{perfil}"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel for="idCheckAtivo"
+                                                   value="#{label['usuario.ativo']} :"/>
+                                    <p:selectBooleanCheckbox id="idCheckAtivo"
+                                                             value="#{usuarioView.entidade.ativo}"/>
+
+                                    <p:outputLabel/>
+                                    <p:outputLabel/>
+
+                                    <h:outputLabel for="pwd1" value="#{label['usuario.senha']} :"/>
+                                    <p:password id="pwd1" value="#{usuarioView.entidade.senha}"
+                                                match="pwd2" required="true" redisplay="true"
+                                                validatorMessage="As senhas informadas são diferentes!"/>
+
+                                    <p:outputLabel/>
+                                    <p:outputLabel/>
+
+                                    <p:outputLabel/>
+                                    <p:outputLabel/>
+
+                                    <h:outputLabel for="pwd2"
+                                                   value="#{label['usuario.confirmarSenha']} :"/>
+                                    <p:password id="pwd2" value="#{usuarioView.entidade.senha}"
+                                                required="true" redisplay="true"/>
+
+                                </h:panelGrid>
+                            </h:panelGrid>
+                        </p:fieldset>
+
+                        <p/>
+                        <p:panel>
+                            <p:commandButton title="#{label['cancelar']}" immediate="true"
+                                             icon="fa icon-cancel Fs16 white" value="#{label['cancelar']}"
+                                             action="#{usuarioView.init()}"
+                                             update="@form" style="margin-left:10%" styleClass="redButton">
+                                <pe:selectDetailLevel step="-1"/>
+                            </p:commandButton>
+
+                            <p:commandButton title="#{label['adicionar']}"
+                                             icon="fa icon-ok Fs16 white" styleClass="greenButton Fright20"
+                                             value="#{label['adicionar']}" update="@form"
+                                             actionListener="#{usuarioView.adicionar}"
+                                             rendered="#{usuarioView.entidade.id eq null}">
+                                <pe:selectDetailLevel step="-1"/>
+                            </p:commandButton>
+
+                            <p:commandButton title="#{label['atualizar']}"
+                                             icon="fa icon-ok Fs16 white" value="#{label['atualizar']}"
+                                             update="@form" styleClass="greenButton Fright20"
+                                             rendered="#{usuarioView.entidade.id ne null}"
+                                             actionListener="#{usuarioView.atualizar}">
+                                <pe:selectDetailLevel step="-1"/>
+                            </p:commandButton>
+                        </p:panel>
+                    </p:fieldset>
+                </div>
+            </div>
+        </p:panel>
+    </div>
+</ui:composition>

@@ -1,0 +1,177 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/pages/template/principal.xhtml">
+
+    <ui:define name="content">
+        <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+        <script>
+            function limparPontos() {
+                var elmtsArray = document.getElementsByClassName("jqplot-point-label");
+                for (var i = 0; i &lt; elmtsArray.length; i++) {
+                    if (elmtsArray[i].innerHTML == '-') {
+                        elmtsArray[i].style.display = 'none';
+                    }
+                }
+            }
+        </script>
+        <div class="ContainerIndent">
+            <h:form id="form">
+                <p:panel>
+                    <div class="Container100 Responsive">
+                        <div class="ContainerIndent TexAlCenter">
+                            <h:outputText value="Índice Solicitação Credênciamento"
+                                          styleClass="FontBold Fs18 hardblue"></h:outputText>
+                        </div>
+                        <p:messages showDetail="false" autoUpdate="true" closable="true"/>
+                    </div>
+                    <div class="Container100 Responsive">
+                        <div class="ContainerIndent">
+                            <p/>
+                            <p:fieldset styleClass="Responsive">
+                                <h:panelGrid columns="6" cellpadding="5">
+                                    <p:outputLabel value="Ano: " for="ano"/>
+                                    <p:selectOneMenu id="ano" style="width:125px"
+                                                     value="#{solicitacaoCredChartView.ano}">
+                                        <f:selectItem itemLabel="Selecione" itemValue=""/>
+                                        <f:selectItem itemLabel="2014" itemValue="2014"/>
+                                        <f:selectItem itemLabel="2015" itemValue="2015"/>
+                                        <f:selectItem itemLabel="2016" itemValue="2016"/>
+
+                                        <p:ajax event="change" update="@form"
+                                                listener="#{solicitacaoCredChartView.createIndiceSolicitacaoCredenciamento}"
+                                                oncomplete="limparPontos()"/>
+                                    </p:selectOneMenu>
+                                </h:panelGrid>
+                            </p:fieldset>
+
+                            <p/>
+                            <p:fieldset styleClass="Responsive" legend="Gráfico Solicitação Credenciamento"
+                                        rendered="#{solicitacaoCredChartView.indiceSolicitacao ne null}">
+                                <h:panelGrid id="pnl" columns="6" cellpadding="5" styleClass="Container70">
+
+                                    <p:chart type="bar" model="#{solicitacaoCredChartView.indiceSolicitacao}"
+                                             style="width:100%; cursor: pointer" responsive="true">
+                                        <p:ajax event="itemSelect" listener="#{solicitacaoCredChartView.itemSelect}"
+                                                update="@form" oncomplete="limparPontos()"/>
+                                    </p:chart>
+                                </h:panelGrid>
+                                <p:outputLabel
+                                        value="Selecione um resultado no gráfico para visualizar os detalhes das solicitações"
+                                        style="margin-left: 39%; text-decoration: underline; color: #0047EC"/>
+                            </p:fieldset>
+                            <p/>
+                            <p:fieldset legend="#{label['desmonte.lista']}" styleClass="Responsive"
+                                        rendered="#{solicitacaoCredChartView.lista.size() > 0}">
+                                <h:panelGrid id="pnl2" styleClass="Container80">
+                                    <p:dataTable value="#{solicitacaoCredChartView.lista}" var="solicitacao"
+                                                 rowKey="#{solicitacao.id}" rows="10"
+                                                 paginatorPosition="bottom"
+                                                 paginator="#{solicitacaoCredChartView.lista.size() > 10}"
+                                                 emptyMessage="#{label['emptyMessage']}" reflow="true">
+
+                                        <p:column headerText="#{label['id']}" sortBy="#{solicitacao.id}"
+                                                  style="width:40px" styleClass="TexAlCenter">
+                                            <h:outputText value="#{solicitacao.id}"/>
+                                        </p:column>
+
+                                        <p:column headerText="#{label['desmonte.razaoSocial']}"
+                                                  sortBy="#{solicitacao.credenciada.razaoSocial}">
+                                            <h:outputText value="#{solicitacao.credenciada.razaoSocial}"/>
+                                        </p:column>
+
+                                        <p:column headerText="#{label['desmonte.cnpj']}"
+                                                  sortBy="#{solicitacao.credenciada.cnpj}"
+                                                  styleClass="TexAlCenter Wid150px">
+                                            <h:outputLabel value="#{solicitacao.credenciada.cnpj}"
+                                                           converter="#{cgcCpfConverter}"/>
+                                        </p:column>
+                                        <p:column headerText="#{label['desmonte.cidadeEstado']}"
+                                                  sortBy="#{solicitacao.credenciada.endereco.cidade.nome}"
+                                                  styleClass="TexAlCenter Wid200px">
+                                            <h:outputText
+                                                    value="#{solicitacao.credenciada.endereco.cidade.nome} - #{solicitacao.credenciada.endereco.cidade.estado.uf}"/>
+                                        </p:column>
+
+                                        <p:column headerText="Validações" styleClass="TexAlCenter Wid150px">
+                                            <h:panelGroup rendered="#{solicitacao.dadosValidados}">
+                                                <i class="icon-ok-circled Fs20 TexAlCenter green"
+                                                   title="Cadastro Validado"/>
+                                            </h:panelGroup>
+                                            <h:panelGroup rendered="#{not solicitacao.dadosValidados}">
+                                                <i class="icon-attention-2 Fs20 TexAlCenter yellow"
+                                                   title="Cadastro Pendente de Validação"/>
+                                            </h:panelGroup>
+
+                                            <h:panelGroup rendered="#{solicitacao.documentosValidados}">
+                                                <i class="icon-doc-text-inv Fs20 TexAlCenter green"
+                                                   title="Documentos Validados"/>
+                                            </h:panelGroup>
+                                            <h:panelGroup rendered="#{not solicitacao.documentosValidados}">
+                                                <i class="icon-doc-text-inv Fs20 TexAlCenter yellow"
+                                                   title="Documentos Pendentes de Validação"/>
+                                            </h:panelGroup>
+
+                                            <h:panelGroup rendered="#{solicitacao.documentosValidados}">
+                                                <i class="icon-users Fs20 TexAlCenter green"
+                                                   title="Usuários Validados"/>
+                                            </h:panelGroup>
+                                            <h:panelGroup rendered="#{not solicitacao.documentosValidados}">
+                                                <i class="icon-users Fs20 TexAlCenter yellow"
+                                                   title="Usuários Pendentes de Validação"/>
+                                            </h:panelGroup>
+
+                                            <h:panelGroup
+                                                    rendered="#{empty solicitacao.vistoria.situacao or solicitacao.vistoria.situacao.isNotAprovadoReprovado}">
+                                                <i class="icon-list-numbered Fs20 TexAlCenter yellow"
+                                                   title="Vistoria Pendente."/>
+                                            </h:panelGroup>
+                                            <h:panelGroup
+                                                    rendered="#{solicitacao.vistoria.situacao.isAprovado}">
+                                                <i class="icon-list-numbered Fs20 TexAlCenter green"
+                                                   title="Vistoria APROVADA."/>
+                                            </h:panelGroup>
+                                            <h:panelGroup
+                                                    rendered="#{solicitacao.vistoria.situacao.isReprovado}">
+                                                <i class="icon-list-numbered Fs20 TexAlCenter red"
+                                                   title="Vistoria APROVADA."/>
+                                            </h:panelGroup>
+                                        </p:column>
+
+                                        <p:column headerText="#{label['credenciamento.solicitacao.situacao']}"
+                                                  sortBy="#{solicitacao.situacao}" styleClass="TexAlCenter Wid200px">
+                                            <h:panelGroup rendered="#{solicitacao.isAprovadaProvisoriamente}">
+                                                <h:outputText value="#{solicitacao.situacao.descricao}"/>
+                                                <i class="icon-stopwatch-1 Fs20 TexAlCenter"/>
+                                            </h:panelGroup>
+
+                                            <h:panelGroup rendered="#{solicitacao.isIndeferida}">
+                                                <h:outputText value="#{solicitacao.situacao.descricao}"/>
+                                                <i class="icon-cancel-circled Fs20 TexAlCenter red"/>
+                                            </h:panelGroup>
+
+                                            <h:panelGroup rendered="#{solicitacao.isAprovada}">
+                                                <h:outputText value="#{solicitacao.situacao.descricao}"/>
+                                                <i class="icon-ok-circled Fs20 TexAlCenter green"/>
+                                            </h:panelGroup>
+                                        </p:column>
+
+                                        <p:column headerText="#{label['dataCadastro']}"
+                                                  sortBy="#{solicitacao.dataRegistro}" styleClass="TexAlCenter"
+                                                  style="width:120px">
+                                            <h:outputText value="#{solicitacao.dataRegistro}">
+                                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                            </h:outputText>
+                                        </p:column>
+                                    </p:dataTable>
+                                </h:panelGrid>
+                            </p:fieldset>
+                        </div>
+                    </div>
+                </p:panel>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,48 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/pages/template/principal.xhtml">
+
+    <ui:define name="content">
+        <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+        <div class="ContainerIndent">
+            <h:form id="form">
+                <p:panel>
+                    <div class="Container100 Responsive">
+                        <div class="ContainerIndent TexAlCenter">
+                            <h:outputText value="FORMULÁRIO DE SOLICITAÇÃO DE REGISTRO"
+                                          styleClass="FontBold Fs18 hardblue"></h:outputText>
+                        </div>
+                        <p:messages showDetail="false" autoUpdate="true" closable="true"/>
+                    </div>
+                    <div class="Container100 Responsive">
+                        <div class="ContainerIndent">
+                            <p/>
+                            <p:fieldset styleClass="Responsive">
+                                <p:dataGrid var="tipo" value="#{impressaoDocumentoView.tipoCredenciamentoEnum}"
+                                            columns="4" layout="grid" id="tipos_cred">
+                                    <p:panel header="#{tipo.descricao}"
+                                             style="text-align:center; text-transform: uppercase;">
+                                        <h:panelGrid columns="1" style="width:100%">
+                                            <p:outputLabel>
+                                                <i class="icon-file-pdf Fs50 TexAlCenter red"/>
+                                            </p:outputLabel>
+
+                                            <p:commandButton title="#{label['imprimir']}"
+                                                             value="#{label['imprimir']}"
+                                                             update="@form" ajax="false"
+                                                             actionListener="#{impressaoDocumentoView.exibirRelatorio(tipo)}"
+                                                             onclick="this.form.target='_blank'">
+                                            </p:commandButton>
+                                        </h:panelGrid>
+                                    </p:panel>
+                                </p:dataGrid>
+                            </p:fieldset>
+                        </div>
+                    </div>
+                </p:panel>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

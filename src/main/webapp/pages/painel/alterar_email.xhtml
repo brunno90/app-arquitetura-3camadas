@@ -1,0 +1,61 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+	<div class="ContainerIndent">
+		<p:panel>
+			<div class="Container100 Responsive">
+				<div class="ContainerIndent TexAlCenter">
+					<h:outputText value="#{label['painel.alterarEmail']}"
+						styleClass="FontBold Fs18 hardblue"></h:outputText>
+				</div>
+				<p:messages autoUpdate="true" closable="true" />
+			</div>
+			<p:fieldset styleClass="Responsive">
+				<div class="Container100 Responsive">
+					<div class="ContainerIndent">
+						<h:panelGrid columns="2" cellpadding="5">
+
+							<p:outputLabel value="#{label['emailAtual']} :" styleClass="fontBold" />
+							<p:outputLabel value="#{usuarioView.usuarioLogado.pessoa.email}"
+								styleClass="hardblue2" />
+
+							<p:outputLabel value="#{label['email']} :" for="idEmail" styleClass="fontBold"/>
+							<p:inputText id="idEmail" style="width: 250px"
+								value="#{usuarioView.novoEmail}" />
+
+							<p:outputLabel value="#{label['confirmacaoEmail']} :"
+								for="idConfirmacaoEmail" styleClass="fontBold"/>
+							<p:inputText id="idConfirmacaoEmail" style="width: 250px"
+								value="#{usuarioView.confirmacaoNovoEmail}" />
+
+							<h:outputLabel for="pwd1"
+								value="#{label['usuario.senha.atual']} :" styleClass="fontBold"/>
+							<p:password value="#{usuarioView.senhaAtual}" required="true"
+								redisplay="true" requiredMessage="SENHA ATUAL é obrigatória." />
+						</h:panelGrid>
+					</div>
+				</div>
+			</p:fieldset>
+			<p />
+			<p:panel>
+				<p:commandButton title="#{label['cancelar']}" immediate="true"
+					icon="fa icon-cancel Fs16 white" value="#{label['cancelar']}"
+					update="@all" style="margin-left:20px">
+					<pe:selectDetailLevel level="1" />
+				</p:commandButton>
+
+				<p:commandButton title="#{label['painel.alterarEmail']}"
+					icon="fa icon-ok Fs16 white" styleClass="greenButton Fright20"
+					value="#{label['painel.alterarEmail']}"
+					action="#{usuarioView.alterarEmail}" update="@all"
+					style="margin-left:200px;">
+					<pe:selectDetailLevel level="1" />
+				</p:commandButton>
+			</p:panel>
+		</p:panel>
+	</div>
+</ui:composition>

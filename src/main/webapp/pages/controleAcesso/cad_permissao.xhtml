@@ -1,0 +1,76 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<div class="ContainerIndent">
+		<p:panel>
+			<div class="Container100 Responsive">
+				<div class="ContainerIndent TexAlCenter">
+					<h:outputText value="#{label['permissao.cadastro']}"
+						styleClass="FontBold Fs18 hardblue"></h:outputText>
+				</div>
+				<p:messages id="messages" showDetail="true" autoUpdate="true"
+					closable="true" />
+			</div>
+			<div class="Container100 Responsive">
+				<div class="ContainerIndent">
+					<p />
+					<p:fieldset legend="#{label['permissao.cadastro']}"
+						styleClass="Responsive" toggleable="true">
+
+						<div class="Container100 Responsive">
+							<div class="ContainerIndent">
+								<h:panelGrid columns="2" cellpadding="5">
+
+									<p:outputLabel value="#{label['nome']} : " for="idNome" />
+									<p:inputText required="true"
+										requiredMessage="#{label['msg.required.nome']}" id="idNome"
+										value="#{permissaoView.entidade.nome}" maxlength="50"
+										size="50" />
+
+									<p:outputLabel value="#{label['valor']} : " for="idValor" />
+									<p:inputText required="true"
+										requiredMessage="#{label['msg.required.valor']}" id="idValor"
+										value="#{permissaoView.entidade.valor}" maxlength="30"
+										size="50" />
+
+									<p:outputLabel value="#{label['descricao']} : " for="idDesc" />
+									<p:inputTextarea id="idDesc"
+										value="#{permissaoView.entidade.descricao}" maxlength="255"
+										cols="50" />
+
+								</h:panelGrid>
+							</div>
+						</div>
+					</p:fieldset>
+					<p />
+					<p:panel>
+						<p:commandButton title="#{label['cancelar']}" immediate="true"
+							icon="fa icon-cancel Fs16 white" value="#{label['cancelar']}"
+							action="#{permissaoView.init()}" update="@all"
+							style="margin-left:10%" styleClass="redButton">
+							<pe:selectDetailLevel step="-1" />
+						</p:commandButton>
+
+						<p:commandButton title="#{label['adicionar']}"
+							icon="fa icon-ok Fs16 white" value="#{label['adicionar']}"
+							update="@all" styleClass="greenButton Fright20"
+							action="#{permissaoView.adicionar}"
+							rendered="#{permissaoView.entidade.id eq null}">
+							<pe:selectDetailLevel step="-1" />
+						</p:commandButton>
+
+						<p:commandButton title="#{label['atualizar']}"
+							icon="fa icon-ok Fs16 white" value="#{label['atualizar']}"
+							update="@all" styleClass=" greenButton Fright20"
+							action="#{permissaoView.atualizar}"
+							rendered="#{permissaoView.entidade.id ne null}">
+							<pe:selectDetailLevel step="-1" />
+						</p:commandButton>
+					</p:panel>
+				</div>
+			</div>
+		</p:panel>
+	</div>
+</ui:composition>

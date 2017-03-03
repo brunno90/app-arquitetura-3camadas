@@ -1,0 +1,142 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pm="http://primefaces.org/mobile"
+	template="/pages/template/portal.xhtml">
+
+    <ui:define name="content">
+        <h:outputScript name="jquery/jquery.js" library="primefaces"
+                        target="head"/>
+        <style>
+            .textPecaMobile {
+                color: #0B66B1;
+                text-transform: uppercase;
+                font-weight: bold !important;
+            }
+
+            table tbody tr td {
+                width: 10%;
+            }
+        </style>
+        <h:form id="form">
+            <f:event type="preRenderComponent" listener="#{itemPecaQrCodeView.findPecaBySequencial}"/>
+            <div class="Container100 Responsive white-back">
+                <div class="ContainerIndent">
+                    <div class="Container100" id="consulta-box">
+                        <p:messages autoUpdate="true" closable="false" escape="false"/>
+                        <p:fieldset legend="Informações da Peça" styleClass="textPecaMobile" toggleable="true"
+                                    rendered="#{itemPecaQrCodeView.entidade.id ne null}">
+                            <h:panelGrid columns="2" cellpadding="5">
+
+                                <p:outputLabel value="Peça :" for="idPeca"/>
+                                <p:outputLabel styleClass="textPecaMobile" id="idPeca"
+                                               style="text-decoration: underline"
+                                               value="#{itemPecaQrCodeView.entidade.pecaRastreabilidade.nome}"/>
+
+                                <p:outputLabel value="Situação Peça :" for="sit1"/>
+                                <p:outputLabel styleClass="textPecaMobile" id="sit1"
+                                               rendered="#{itemPecaQrCodeView.entidade.situacao eq 'REUTILIZAVEL'}"
+                                               style="color: #178A03 !important;"
+                                               value="#{itemPecaQrCodeView.entidade.situacao}">
+                                    <i class="icon-ok-circled Fs20 TexAlCenter green"/>
+                                </p:outputLabel>
+                                <p:outputLabel styleClass="textPecaMobile" id="sit2"
+                                               rendered="#{itemPecaQrCodeView.entidade.situacao eq 'DESCARTE'}"
+                                               style="color: #E20707 !important;"
+                                               value="#{itemPecaQrCodeView.entidade.situacao}">
+                                    <i class="icon-cancel-circled Fs20 TexAlCenter red"/>
+                                </p:outputLabel>
+
+								<p:outputLabel styleClass="textPecaMobile" id="sit3"
+									rendered="#{itemPecaQrCodeView.entidade.situacao eq 'INEXISTENTE'}"
+									style="color: #E20707 !important;"
+									value="#{itemPecaQrCodeView.entidade.situacao}">
+									<i class="icon-warning-empty Fs20 TexAlCenter yellow" />
+								</p:outputLabel>
+
+								<p:outputLabel value="Tipo Veiculo :" for="idTpVeiculo" />
+								<p:outputLabel id="idTpVeiculo" styleClass="textPecaMobile"
+									value="#{itemPecaQrCodeView.entidade.veiculo.categoria.nome}" />
+
+                                <p:outputLabel value="#{label['veiculo.placa']} :" for="idplaca"/>
+                                <p:outputLabel styleClass="textPecaMobile" id="idplaca"
+                                               value="#{itemPecaQrCodeView.entidade.veiculo.placa}"/>
+
+                                <p:outputLabel value="#{label['veiculo.renavam']} :" for="renav"/>
+                                <p:outputLabel styleClass="textPecaMobile" id="renav"
+                                               value="#{itemPecaQrCodeView.entidade.veiculo.renavam}"/>
+
+                                <p:outputLabel value="#{label['veiculo.marca']} :" for="idMarca"/>
+                                <p:outputLabel styleClass="textPecaMobile" id="idMarca"
+                                               value="#{itemPecaQrCodeView.entidade.veiculo.modelo.marca.nome}"/>
+
+                                <p:outputLabel value="#{label['veiculo.modelo']}:" for="idModelo"/>
+                                <p:outputLabel styleClass="textPecaMobile" id="idModelo"
+                                               value="#{itemPecaQrCodeView.entidade.veiculo.modelo.nome}"/>
+
+                                <p:outputLabel value="Ano Fabric.:"/>
+                                <p:outputLabel styleClass="textPecaMobile"
+                                               value="#{itemPecaQrCodeView.entidade.veiculo.anoFabricacao}"/>
+
+                                <p:outputLabel value="#{label['veiculo.anoModelo']}:"/>
+                                <p:outputLabel styleClass="textPecaMobile"
+                                               value="#{itemPecaQrCodeView.entidade.veiculo.anoModelo}"/>
+
+                                <p:outputLabel value="#{label['veiculo.cor']} :"/>
+                                <p:outputLabel styleClass="textPecaMobile"
+                                               value="#{itemPecaQrCodeView.entidade.veiculo.cor}"/>
+
+                            </h:panelGrid>
+                        </p:fieldset>
+                        <p/>
+                        <p:fieldset legend="Informações do Desmonte" styleClass="textPecaMobile" toggleable="true"
+                                    rendered="#{itemPecaQrCodeView.entidade.id ne null}">
+                            <h:panelGrid columns="2" cellpadding="5">
+                                <p:outputLabel value="#{label['desmonte.nomeFantasia']} :"/>
+                                <p:outputLabel styleClass="textPecaMobile"
+                                               value="#{itemPecaQrCodeView.laudoTecnico.desmonte.nomeFantasia}"/>
+
+                                <p:outputLabel value="#{label['desmonte.cnpj']} :"/>
+                                <p:outputLabel styleClass="textPecaMobile"
+                                               value="#{itemPecaQrCodeView.laudoTecnico.desmonte.cnpj}"/>
+
+                                <p:outputLabel value="#{label['endereco.logradouro']} :"/>
+                                <p:outputLabel styleClass="textPecaMobile"
+                                               value="#{itemPecaQrCodeView.laudoTecnico.desmonte.endereco.logradouro}"/>
+
+                                <p:outputLabel value="#{label['endereco.complemento']} :"/>
+                                <p:outputLabel styleClass="textPecaMobile"
+                                               value="#{itemPecaQrCodeView.laudoTecnico.desmonte.endereco.complemento}"/>
+
+                                <p:outputLabel value="#{label['endereco.bairro']} :"/>
+                                <p:outputLabel styleClass="textPecaMobile"
+                                               value="#{itemPecaQrCodeView.laudoTecnico.desmonte.endereco.bairro}"/>
+
+                                <p:outputLabel value="#{label['endereco.cidade']} :"/>
+                                <p:outputLabel styleClass="textPecaMobile"
+                                               value="#{itemPecaQrCodeView.laudoTecnico.desmonte.endereco.cidade.nome} - #{itemPecaQrCodeView.laudoTecnico.desmonte.endereco.cidade.estado.uf}"/>
+                            </h:panelGrid>
+                        </p:fieldset>
+                        <p/>
+                        <p:fieldset legend="#{label['veiculo.fotos']}" styleClass="textPecaMobile"
+                                    rendered="#{itemPecaQrCodeView.entidade.id ne null}">
+                            <!-- DADOS FOTOS VEICULO -->
+                            <h:panelGrid id="idLegendFoto" columns="1" styleClass="Container100">
+
+                                <ui:repeat value="#{itemPecaQrCodeView.entidade.veiculo.listaAnexo}"
+                                           var="anexo">
+                                    <div style="width: 95%; float: left; margin: 2px;">
+                                        <p:graphicImage value="/temp/#{anexo.titulo}" cache="false"
+                                                        width="100%" style="float:left; cursor: pointer"/>
+                                    </div>
+                                </ui:repeat>
+                            </h:panelGrid>
+                        </p:fieldset>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

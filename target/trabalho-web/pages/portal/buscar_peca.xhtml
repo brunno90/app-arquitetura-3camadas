@@ -1,0 +1,150 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <div class="Container100 Responsive white-back">
+        <div class="ContainerIndent">
+            <div class="Container100" id="consulta-box">
+                <p:messages id="msg" autoUpdate="true"/>
+                <p:fieldset legend="Consulta por Número de Seríe">
+                    <p:inputMask mask="aa 9 999999999 9 999" value="#{itemPecaView.numeroSequencial}"
+                                 style="text-transform: uppercase; width: 150px"/>
+                    <p:commandButton icon="fa icon-search Fs14 white"
+                                     actionListener="#{itemPecaView.findPecaBySequencial()}"
+                                     update="@form" styleClass="Fs16">
+                        <pe:selectDetailLevel level="2"/>
+                        <f:setPropertyActionListener target="#{itemPecaView.entidade}"
+                                                     value="#{itemPecaView.entidade}"/>
+                        <f:setPropertyActionListener target="#{itemPecaView.laudoTecnico}"
+                                                     value="#{itemPecaView.laudoTecnico}"/>
+                    </p:commandButton>
+                </p:fieldset>
+                <p/>
+
+                <p:fieldset legend="Lista de Peças">
+
+                    <h:panelGrid columns="3" cellpadding="5">
+
+                        <p:outputLabel value="Tipo Veiculo" for="idTipoVeiculo"/>
+
+                        <p:selectOneMenu id="idTipoVeiculo"
+                                         value="#{itemPecaView.catVeiculoSelecionado}"
+                                         style="width:125px" converter="#{modelSelectConverter}">
+
+                            <f:selectItem itemLabel="Selecione" noSelectionOption="true"/>
+
+                            <f:selectItems value="#{itemPecaView.listaCategorias}"
+                                           var="categoria"
+                                           itemLabel="#{categoria.categoria} - #{categoria.nome}"
+                                           itemValue="#{categoria}"/>
+
+                            <p:ajax event="change"
+                                    listener="#{itemPecaView.findPecaByCategoria()}"/>
+                        </p:selectOneMenu>
+                        <p:commandButton icon="fa icon-search Fs14 white"
+                                         actionListener="#{itemPecaView.findAllPecasByFilter()}"
+                                         update="@form" styleClass="Fs16"/>
+
+                    </h:panelGrid>
+
+                    <h:panelGrid cellpadding="5">
+
+                        <p:dataTable id="idDataTableItem" var="itemPeca" widgetVar="pecasTable"
+                                     rowIndexVar="index" value="#{itemPecaView.lista}"
+                                     rowKey="#{itemPeca.id}" rows="15" paginator="true"
+                                     paginatorPosition="bottom" reflow="true"
+                                     filteredValue="#{itemPecaView.filteredItensPecas}"
+                                     styleClass="Container100">
+
+                            <p:column headerText="#" style="width:50px"
+                                      styleClass="TexAlCenter">
+                                <h:outputText value="#{index + 1}"/>
+                            </p:column>
+
+                            <p:column headerText="#{label['itemPeca.peca']}"
+                                      filterBy="#{itemPeca.pecaRastreabilidade}"
+                                      filterMatchMode="exact"
+                                      sortBy="#{itemPeca.pecaRastreabilidade.nome}">
+                                <f:facet name="filter">
+                                    <p:selectOneMenu onchange="PF('pecasTable').filter()"
+                                                     style="width: 130px"
+                                                     converter="#{modelSelectConverter}">
+                                        <f:selectItem itemLabel="Selecione" itemValue="#{null}"
+                                                      noSelectionOption="true"/>
+                                        <f:selectItems
+                                                value="#{itemPecaView.listaPecaRastreabilidades}"
+                                                var="item" itemLabel="#{item.nome}" itemValue="#{item}"/>
+                                    </p:selectOneMenu>
+
+                                </f:facet>
+                                <h:outputText value="#{itemPeca.pecaRastreabilidade.nome}"/>
+                            </p:column>
+
+                            <p:column headerText="#{label['laudo.itemPeca.subSistema']}"
+                                      filterBy="#{itemPeca.pecaRastreabilidade.grupo.nome}"
+                                      filterMatchMode="contains"
+                                      sortBy="#{itemPeca.pecaRastreabilidade.grupo.nome}">
+                                <h:outputText
+                                        value="#{itemPeca.pecaRastreabilidade.grupo.nome}"/>
+                            </p:column>
+
+                            <p:column headerText="#{label['veiculo.marca']}"
+                                      filterBy="#{itemPeca.veiculo.modelo.marca}" filterMatchMode="exact"
+                                      sortBy="#{itemPeca.veiculo.modelo.marca.nome}">
+                                <f:facet name="filter">
+                                    <p:selectOneMenu onchange="PF('pecasTable').filter()"
+                                                     converter="#{modelSelectConverter}">
+                                        <f:selectItem itemLabel="Selecione" itemValue="#{null}"
+                                                      noSelectionOption="true"/>
+                                        <f:selectItems value="#{itemPecaView.listaMarcas}" var="marca"
+                                                       itemLabel="#{marca.nome}"
+                                                       itemValue="#{marca}"/>
+                                    </p:selectOneMenu>
+
+                                </f:facet>
+                                <h:outputText value="#{itemPeca.veiculo.modelo.marca.nome}"/>
+                            </p:column>
+
+                            <p:column headerText="#{label['veiculo.modelo']}"
+                                      filterBy="#{itemPeca.veiculo.modelo.nome}" filterMatchMode="contains"
+                                      style="width:250px" sortBy="#{itemPeca.veiculo.modelo.nome}">
+                                <h:outputText value="#{itemPeca.veiculo.modelo.nome}"/>
+                            </p:column>
+
+                            <p:column headerText="#{label['veiculo.cor']}"
+                                      filterBy="#{itemPeca.veiculo.cor}" filterMatchMode="contains"
+                                      sortBy="#{itemPeca.veiculo.cor}">
+                                <h:outputText value="#{itemPeca.veiculo.cor}"/>
+                            </p:column>
+
+                            <p:column headerText="#{label['veiculo.anoModelo']}"
+                                      filterBy="#{itemPeca.veiculo.anoModelo}" filterMatchMode="exact"
+                                      sortBy="#{itemPeca.veiculo.anoModelo}">
+                                <h:outputText value="#{itemPeca.veiculo.anoModelo}"/>
+                            </p:column>
+
+                            <p:column headerText="#{label['acoes']}" styleClass="TexAlCenter"
+                                      style="width: 80px">
+                                <p:commandLink title="#{label['visualizar']}" immediate="true"
+                                               update="@all" action="#{itemPecaView.detalharPeca()}"
+                                               styleClass="ui-btn Fs15 default-color">
+                                    <i class="icon-search-2 Fs17 hardblue"></i>
+                                    <pe:selectDetailLevel level="2"/>
+                                    <f:setPropertyActionListener target="#{itemPecaView.entidade}"
+                                                                 value="#{itemPeca}"/>
+                                    <f:setPropertyActionListener target="#{itemPecaView.laudoTecnico}"
+                                                                 value="#{itemPecaView.laudoTecnico}"/>
+                                </p:commandLink>
+                            </p:column>
+
+                        </p:dataTable>
+
+                    </h:panelGrid>
+                </p:fieldset>
+            </div>
+        </div>
+    </div>
+</ui:composition>

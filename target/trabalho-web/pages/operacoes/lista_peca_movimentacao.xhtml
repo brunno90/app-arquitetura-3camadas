@@ -1,0 +1,143 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <div class="ContainerIndent">
+        <p:panel>
+            <div class="Container100 Responsive">
+                <div class="ContainerIndent TexAlCenter">
+                    <h:outputText value="#{label['menu.movimentacaoItemPeca']}"
+                                  styleClass="FontBold Fs18 hardblue"></h:outputText>
+                </div>
+                <p:messages autoUpdate="true" closable="true" escape="false"/>
+            </div>
+            <div class="Container100 Responsive">
+                <div class="ContainerIndent">
+                    <p:fieldset styleClass="Responsive" legend="Peças pendentes de restauração">
+
+                        <p:dataTable id="tbl_pecas_restauradas" var="itemPeca"
+                                     value="#{movimentacaoItemPecaView.tabelaItemPeca.listItem}"
+                                     selection="#{movimentacaoItemPecaView.tabelaItemPeca.selectedItem}"
+                                     selectionMode="single"
+                                     rowKey="#{itemPeca.id}" rows="10"
+                                     paginator="#{movimentacaoItemPecaView.tabelaItemPeca.listItem.size() > 10 ? true : false}"
+                                     paginatorPosition="bottom"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                     emptyMessage="#{label['emptyMessage']}" reflow="true">
+
+                            <p:column headerText="#{label['id']}" sortBy="#{itemPeca.id}"
+                                      style="width:40px" styleClass="TexAlCenter">
+                                <h:outputText value="#{itemPeca.id}"/>
+                            </p:column>
+                            <p:column headerText="#{label['itemPeca.peca']}"
+                                      sortBy="#{itemPeca.pecaRastreabilidade.nome}">
+                                <h:outputText value="#{itemPeca.pecaRastreabilidade.nome}"/>
+                            </p:column>
+                            <p:column headerText="#{label['laudo.itemPeca.subSistema']}"
+                                      sortBy="#{itemPeca.pecaRastreabilidade.grupo.nome}">
+                                <h:outputText
+                                        value="#{itemPeca.pecaRastreabilidade.grupo.nome}"/>
+                            </p:column>
+                            <p:column headerText="#{label['veiculo.marca']}"
+                                      sortBy="#{itemPeca.veiculo.modelo.marca.nome}">
+                                <h:outputText value="#{itemPeca.veiculo.modelo.marca.nome}"/>
+                            </p:column>
+                            <p:column headerText="#{label['veiculo.modelo']}"
+                                      style="width:250px" sortBy="#{itemPeca.veiculo.modelo}">
+                                <h:outputText value="#{itemPeca.veiculo.modelo.nome}"/>
+                            </p:column>
+                            <p:column headerText="#{label['situacao']}" sortBy="#{itemPeca.situacao}"
+                                      styleClass="TexAlCenter">
+                                <h:outputText value="#{itemPeca.situacao.descricao}"/>
+                            </p:column>
+                            <p:column headerText="#{label['acoes']}"
+                                      styleClass="TexAlCenter Wid200px">
+                                <p:commandLink title="#{label['movimentacaoItemPeca.registrarSaida']}"
+                                               immediate="true" update="@all"
+                                               action="#{movimentacaoItemPecaView.registrarSaida(itemPeca)}"
+                                               styleClass="ui-btn Fs15 default-color">
+                                    <i class="icon-upload-outline Fs17 hardblue"></i>
+                                </p:commandLink>
+                            </p:column>
+                        </p:dataTable>
+                    </p:fieldset>
+
+                    <p/>
+
+                    <p:fieldset styleClass="Responsive" legend="Peças em restauração">
+
+                        <p:dataTable id="tbl_pecas_em_restauracao" var="movPeca"
+                                     value="#{movimentacaoItemPecaView.tabelaMovimentacaoPeca.listItem}"
+                                     selection="#{movimentacaoItemPecaView.tabelaMovimentacaoPeca.selectedItem}"
+                                     selectionMode="single"
+                                     rowKey="#{movPeca.itemPeca.id}" rows="10"
+                                     paginator="#{movimentacaoItemPecaView.tabelaMovimentacaoPeca.listItem.size() > 10 ? true : false}"
+                                     paginatorPosition="bottom"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                     editable="true" editMode="cell" emptyMessage="#{label['emptyMessage']}"
+                                     reflow="true">
+
+                            <p:ajax event="cellEdit" update="@this" listener="#{movimentacaoItemPecaView.onCellEdit}"/>
+
+                            <p:column headerText="#{label['id']}" sortBy="#{movPeca.itemPeca.id}"
+                                      style="width:40px" styleClass="TexAlCenter">
+                                <h:outputText value="#{movPeca.itemPeca.id}"/>
+                            </p:column>
+                            <p:column headerText="#{label['itemPeca.peca']}"
+                                      sortBy="#{movPeca.itemPeca.pecaRastreabilidade.nome}">
+                                <h:outputText value="#{movPeca.itemPeca.pecaRastreabilidade.nome}"/>
+                            </p:column>
+                            <p:column headerText="#{label['laudo.itemPeca.subSistema']}"
+                                      sortBy="#{movPeca.itemPeca.pecaRastreabilidade.grupo.nome}">
+                                <h:outputText
+                                        value="#{movPeca.itemPeca.pecaRastreabilidade.grupo.nome}"/>
+                            </p:column>
+                            <p:column headerText="#{label['veiculo.marca']}"
+                                      sortBy="#{movPeca.itemPeca.veiculo.modelo.marca.nome}">
+                                <h:outputText value="#{movPeca.itemPeca.veiculo.modelo.marca.nome}"/>
+                            </p:column>
+                            <p:column headerText="#{label['veiculo.modelo']}"
+                                      style="width:250px" sortBy="#{movPeca.itemPeca.veiculo.modelo}">
+                                <h:outputText value="#{movPeca.itemPeca.veiculo.modelo.nome}"/>
+                            </p:column>
+                            <p:column headerText="#{label['situacao']}" styleClass="TexAlCenter">
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <p:inputText value="#{movPeca.status}"
+                                                     styleClass="Container70 Marleft10"/>
+                                        <i class="icon-pencil-1 Fs17"/>
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:selectOneMenu value="#{movPeca.status}"
+                                                         style="width:70% !important;">
+                                            <f:selectItems
+                                                    value="#{movimentacaoItemPecaView.listaSituacaoMovimentacaoPecaEnum}"
+                                                    var="tipo" itemLabel="#{tipo}" itemValue="#{tipo}"/>
+                                        </p:selectOneMenu>
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+                            <p:column headerText="#{label['acoes']}"
+                                      styleClass="TexAlCenter Wid200px">
+                                <p:commandLink title="#{label['movimentacaoItemPeca.registrarRetorno']}"
+                                               immediate="true" update="@all"
+                                               action="#{movimentacaoItemPecaView.registrarRetorno()}"
+                                               styleClass="ui-btn Fs15 default-color">
+                                    <i class="icon-download-outline Fs17 hardblue"></i>
+                                    <f:setPropertyActionListener
+                                            target="#{movimentacaoItemPecaView.movimentacaoItemPeca}"
+                                            value="#{movPeca}"/>
+                                </p:commandLink>
+                            </p:column>
+                        </p:dataTable>
+                    </p:fieldset>
+
+                    <p/>
+                </div>
+            </div>
+        </p:panel>
+    </div>
+</ui:composition>

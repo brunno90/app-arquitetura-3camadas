@@ -1,0 +1,132 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+	<div class="Container100 Responsive">
+		<div class="ContainerIndent">
+			<p:fieldset legend="#{label['dadosGerais']}">
+				<h:panelGrid columns="6" cellpadding="5">
+					<p:outputLabel value="#{label['desmonte.cnpj']} :" for="idCnpj" />
+					<p:inputMask id="idCnpj" mask="99.999.999/9999-99" required="true"
+						requiredMessage="Informar o CNPJ" converter="#{cgcCpfConverter}"
+						value="#{desmonteView.entidade.cnpj}" />
+
+					<p:outputLabel value="#{label['desmonte.razaoSocial']} :"
+						for="idRazaoSocial" />
+					<p:inputText id="idRazaoSocial"
+						value="#{desmonteView.entidade.razaoSocial}" required="true"
+						requiredMessage="Informar a Razão Social" />
+
+					<p:outputLabel value="#{label['desmonte.nomeFantasia']} :"
+						for="idNomeFantasia" />
+					<p:inputText id="idNomeFantasia"
+						value="#{desmonteView.entidade.nomeFantasia}" />
+
+					<p:outputLabel value="#{label['email']} :" for="idEmail" />
+					<p:inputText id="idEmail" style="width: 250px"
+						value="#{desmonteView.entidade.email}" />
+
+					<p:outputLabel value="#{label['telefone']} :" for="idTelefone" />
+					<p:inputMask mask="(99) 9999-9999?9" id="idTelefone"
+						value="#{desmonteView.entidade.telefone1}" size="16" />
+
+					<p:outputLabel value="#{label['telefone']} :" for="idTelefone1" />
+					<p:inputMask mask="(99) 9999-9999?9" id="idTelefone1"
+						value="#{desmonteView.entidade.telefone2}" size="16" />
+
+					<p:outputLabel value="#{label['desmonte.tipo']} :"
+						for="idTipoEmpresa" />
+					<p:selectOneMenu id="idTipoEmpresa"
+						value="#{desmonteView.entidade.tipoDesmonte}"
+						styleClass="Container100">
+						<f:selectItems value="#{desmonteView.tipoDesmonte}" var="tipo"
+							itemLabel="#{tipo.descricao}" itemValue="#{tipo}" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+			</p:fieldset>
+			<p />
+			<p:fieldset legend="Endereço">
+				<h:panelGrid columns="6" cellpadding="5">
+					<p:outputLabel value="#{label['endereco.estado']} :" for="idEstado" />
+					<p:selectOneMenu id="idEstado"
+						value="#{desmonteView.estadoSelecionado}" style="min-width:110px;"
+						converter="#{modelSelectConverter}">
+						<f:selectItems value="#{desmonteView.listaEstado}" var="cidade"
+									   itemLabel="#{cidade.nome}" itemValue="#{cidade}" />
+
+						<p:ajax event="change"
+							listener="#{desmonteView.listarCidadesOnChange}"
+							update="idCidade" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="#{label['endereco.cidade']} :" for="idCidade" />
+					<p:selectOneMenu id="idCidade"
+						value="#{desmonteView.entidade.endereco.cidade}"
+						style="min-width:110px;" converter="#{modelSelectConverter}">
+						<f:selectItems value="#{desmonteView.listaCidade}" var="cidade"
+									   itemLabel="#{cidade.nome}" itemValue="#{cidade}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="#{label['endereco.cep']} :" for="idCep" />
+					<p:inputMask mask="99999-999" id="idCep"
+						value="#{desmonteView.entidade.endereco.cep}" size="16" />
+
+					<p:outputLabel value="#{label['endereco.bairro']} :" for="idBairro" />
+					<p:inputText id="idBairro"
+						value="#{desmonteView.entidade.endereco.bairro}" />
+
+					<p:outputLabel value="#{label['endereco.logradouro']} :"
+						for="idLogradouro" />
+					<p:inputText id="idLogradouro" required="true"
+						requiredMessage="Informar Logradouro"
+						value="#{desmonteView.entidade.endereco.logradouro}" />
+
+					<p:outputLabel value="#{label['endereco.complemento']} :"
+						for="idComplemento" />
+					<p:inputText id="idComplemento"
+						value="#{desmonteView.entidade.endereco.complemento}" />
+
+					<p:outputLabel value="#{label['endereco.numero']} :" for="idNumero" />
+					<p:inputText id="idNumero"
+						value="#{desmonteView.entidade.endereco.numero}" maxlength="10" />
+				</h:panelGrid>
+			</p:fieldset>
+			<p />
+
+			<ui:include src="/pages/desmonte/lista_usuarios_desmonte.xhtml" />
+
+			<p />
+
+			<ui:include src="/pages/desmonte/lista_anexos_desmonte.xhtml" />
+
+			<p />
+
+			<p:fieldset>
+				<p:commandButton title="#{label['cancelar']}" immediate="true"
+					icon="fa icon-cancel Fs16 white" value="#{label['cancelar']}"
+					update="@form" style="margin-left:10%" styleClass="redButton">
+					<pe:selectDetailLevel step="-1" />
+				</p:commandButton>
+
+				<p:commandButton title="#{label['atualizar']}"
+					icon="fa icon-ok Fs16 white" value="#{label['atualizar']}"
+					styleClass="greenButton Fright20" update="@form"
+					rendered="#{desmonteView.entidade.id ne null}"
+					actionListener="#{desmonteView.atualizar}">
+					<pe:selectDetailLevel step="-1" />
+				</p:commandButton>
+
+				<p:commandButton title="#{label['confirmar']}"
+					icon="fa icon-ok Fs16 white" value="#{label['confirmar']}"
+					styleClass="greenButton Fright20" update="@form"
+					actionListener="#{desmonteView.adicionar}"
+					rendered="#{desmonteView.entidade.id eq null}">
+					<pe:selectDetailLevel step="-1" />
+				</p:commandButton>
+			</p:fieldset>
+		</div>
+	</div>
+</ui:composition>

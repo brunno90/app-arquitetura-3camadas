@@ -1,0 +1,38 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="/pages/template/principal.xhtml">
+
+    <ui:define name="content">
+        <h:outputScript name="jquery/jquery.js" library="primefaces"
+                        target="head"/>
+
+        <h:form id="form">
+            <div class="ContainerIndent">
+                <p:panel>
+                    <div class="Container100 Responsive">
+                        <div class="ContainerIndent TexAlCenter">
+                            <h:outputText value="#{label['saidaPeca.saidaPeca']}"
+                                          styleClass="FontBold Fs18 hardblue"></h:outputText>
+                        </div>
+                        <p:messages autoUpdate="true" closable="true" escape="false"/>
+                    </div>
+                    <pe:masterDetail id="masterDetail" showBreadcrumb="false"
+                                     selectLevelListener="#{selectLevelListener.handleNavigation}">
+                        <pe:masterDetailLevel level="1">
+                            <ui:include src="/pages/operacoes/lista_saida_peca.xhtml"/>
+                        </pe:masterDetailLevel>
+                        <pe:masterDetailLevel level="2">
+                            <ui:include src="/pages/operacoes/cad_saida_peca.xhtml"/>
+                        </pe:masterDetailLevel>
+                        <pe:masterDetailLevel level="3">
+                            <ui:include src="/pages/operacoes/dados_saida_peca.xhtml"/>
+                        </pe:masterDetailLevel>
+                    </pe:masterDetail>
+                </p:panel>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

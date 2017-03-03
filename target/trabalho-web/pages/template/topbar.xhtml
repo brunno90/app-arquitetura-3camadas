@@ -1,0 +1,60 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <div id="layout-header" class="Unselectable fontRegular">
+        <a href="../index.xhtml" id="layout-logo">
+            <h:outputText value="Trabalho"  style="color: #ffffff;"/>
+        </a>
+        <h:form>
+            <ul id="sm-topmenu" class="layout-header-widgets white Fs16">
+
+                <li class="Fleft BordRadHalf TexAlCenter"><i
+                        class="icon-wrench-1 Fs24"></i>
+                    <ul
+                            class="layout-header-widgets-submenu BordRad5 shadows white Animated05">
+                        <li class="Animated04"><a href="#" class="white Unselectable"><i
+                                class="icon-sun"></i>#{label['topbar.configuracoes']}</a></li>
+                        <li class="Animated05" hidden="true"><a href="#"
+                                                                class="white Unselectable"><i
+                                class="icon-lifebuoy"></i>#{label['topbar.ajuda']}</a></li>
+                    </ul>
+                </li>
+
+                <li class="Fleft BordRadHalf TexAlCenter"><i
+                        class="icon-user-male Fs24"></i>
+                    <ul
+                            class="layout-header-widgets-submenu BordRad5 shadows white Animated05">
+                        <li class="Animated05"><a class="white Unselectable"><i
+                                class="icon-user-male Fs26 OvHidden"></i><span class="Fs18">
+
+									<h:panelGroup rendered="#{userSession.usuario.pessoa.isPj}">
+										#{userSession.usuario.pessoa.nomeFantasia}
+									</h:panelGroup> <h:panelGroup
+                                rendered="#{not userSession.usuario.pessoa.isPj}">#{userSession.usuario.pessoa.nome}
+									</h:panelGroup>
+							</span></a></li>
+                        <li class="Animated05"><p:commandLink
+                                styleClass="ui-commandlink-alternative"
+                                actionListener="#{authenticator.carregarPainelOpcoes}">
+                            <i class="icon-sliders"/>#{label['topbar.opcoes']}</p:commandLink></li>
+                        <li class="Animated05"><p:commandLink
+                                styleClass="ui-commandlink-alternative"
+                                actionListener="#{authenticator.logout()}">
+                            <i class="icon-power"/>#{label['topbar.logout']}</p:commandLink></li>
+                    </ul>
+                </li>
+
+            </ul>
+        </h:form>
+        <!-- NEVER REMOVE FOLLOWING 'UL' TAG ! BECAUSE THIS CONTAINS RESPONSIVE MODE HEADER MENU OPEN-CLOSE BUTTON -->
+        <ul id="sm-mobiletopmenu" class="layout-header-widgets white Fs16">
+            <li
+                    class="Fleft BordRadHalf TexAlCenter Animated05 DisplayOnResponsive"><i
+                    class="icon-th-1 Fs24"></i></li>
+        </ul>
+        <!-- ****** -->
+    </div>
+</ui:composition>

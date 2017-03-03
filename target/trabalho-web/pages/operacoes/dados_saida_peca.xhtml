@@ -1,0 +1,118 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <div class="Container100 Responsive">
+        <div class="ContainerIndent">
+            <p:fieldset legend="Dados Nota Fiscal">
+
+                <h:panelGrid columns="4" cellpadding="5">
+
+                    <p:outputLabel value="#{label['notaFiscal.numero']}:" for="num_nf" styleClass="fontBold"/>
+                    <p:outputLabel id="num_nf" disabled="true" styleClass="hardblue2"
+                                   value="#{saidaPecaView.notaFiscal.numero}"/>
+
+                    <p:outputLabel value="#{label['notaFiscal.serie']}:" for="serie_id" styleClass="fontBold"/>
+                    <p:outputLabel id="serie_id" styleClass="hardblue2" value="#{saidaPecaView.notaFiscal.serie}"/>
+
+                    <p:outputLabel value="#{label['notaFiscal.chave']}:" for="chave_id" styleClass="fontBold"/>
+                    <p:outputLabel id="chave_id" styleClass="hardblue2" value="#{saidaPecaView.notaFiscal.chaveNfe}"/>
+
+                    <p:outputLabel value="#{label['notaFiscal.dataEmissao']}: " for="data" styleClass="fontBold"/>
+                    <p:outputLabel id="data" styleClass="hardblue2" value="#{saidaPecaView.notaFiscal.dataEmissao}">
+                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{initParam.timezone}"/>
+                    </p:outputLabel>
+
+
+                    <p:outputLabel value="#{label['notaFiscal.cgcCpfComprador']}:" for="id_cgc_comprador"
+                                   styleClass="fontBold"/>
+                    <p:outputLabel id="id_cgc_comprador" styleClass="hardblue2"
+                                   value="#{saidaPecaView.notaFiscal.cgcCpfComprador}"/>
+
+                    <p:outputLabel value="#{label['notaFiscal.nomeComprador']}:" for="nm_comp" styleClass="fontBold"/>
+                    <p:outputLabel id="nm_comp" value="#{saidaPecaView.notaFiscal.nomeComprador}"
+                                   styleClass="hardblue2"/>
+
+                    <p:outputLabel value="#{label['notaFiscal.cgcCpfVendedor']}:" for="id_cgc_vendedor"
+                                   styleClass="fontBold"/>
+                    <p:outputLabel id="id_cgc_vendedor" styleClass="hardblue2"
+                                   value="#{saidaPecaView.notaFiscal.cgcCpfVendedor}"/>
+
+                    <p:outputLabel value="#{label['notaFiscal.nomeVendedor']}:" for="nm_vend" styleClass="fontBold"/>
+                    <p:outputLabel id="nm_vend" value="#{saidaPecaView.notaFiscal.nomeVendedor}"
+                                   styleClass="hardblue2"/>
+
+                </h:panelGrid>
+            </p:fieldset>
+
+            <p/>
+            <p:fieldset legend="Itens Nota Fiscal">
+                <div class="Container90 Fnone TexAlCenter TabContent">
+                    <h:panelGrid cellpadding="5">
+                        <p:dataTable id="idTableItemNFE" var="itemNotaFiscal"
+                                     rowIndexVar="index" rowKey="#{index}" editable="true"
+                                     value="#{saidaPecaView.notaFiscal.itensNotaFiscal}"
+                                     rows="15" paginator="true" paginatorPosition="bottom"
+                                     reflow="true" styleClass="Container90">
+
+                            <p:column headerText="#" style="width:50px"
+                                      styleClass="TexAlCenter">
+                                <h:outputText value="#{index + 1}"/>
+                            </p:column>
+
+                            <p:column headerText="#{label['itemPeca.peca']}"
+                                      sortBy="#{itemNotaFiscal.itemPeca.pecaRastreabilidade.nome}">
+                                <h:outputText value="#{itemNotaFiscal.itemPeca.pecaRastreabilidade.nome}"/>
+                            </p:column>
+
+                            <p:column headerText="#{label['laudo.itemPeca.subSistema']}"
+                                      sortBy="#{itemNotaFiscal.itemPeca.pecaRastreabilidade.grupo.nome}">
+                                <h:outputText
+                                        value="#{itemNotaFiscal.itemPeca.pecaRastreabilidade.grupo.nome}"/>
+                            </p:column>
+
+                            <p:column headerText="#{label['veiculo.marca']}"
+                                      sortBy="#{itemNotaFiscal.itemPeca.veiculo.modelo.marca.nome}">
+                                <h:outputText value="#{itemNotaFiscal.itemPeca.veiculo.modelo.marca.nome}"/>
+                            </p:column>
+
+                            <p:column headerText="#{label['veiculo.modelo']}"
+                                      style="width:200px" sortBy="#{itemNotaFiscal.itemPeca.veiculo.modelo}">
+                                <h:outputText value="#{itemNotaFiscal.itemPeca.veiculo.modelo.nome}"/>
+                            </p:column>
+
+                            <p:column headerText="#{label['veiculo.placa']}"
+                                      style="width:100px" sortBy="#{itemNotaFiscal.itemPeca.veiculo.placa}">
+                                <h:outputText value="#{itemNotaFiscal.itemPeca.veiculo.placa}"/>
+                            </p:column>
+
+                            <p:column headerText="#{label['veiculo.anoModelo']}"
+                                      sortBy="#{itemNotaFiscal.itemPeca.veiculo.anoModelo}">
+                                <h:outputText value="#{itemNotaFiscal.itemPeca.veiculo.anoModelo}"/>
+                            </p:column>
+
+                            <p:column headerText="#{label['itemNotaFiscal.preco']}">
+                                <h:outputText
+                                        value="#{itemNotaFiscal.preco eq null ? 'Não informado' : itemNotaFiscal.preco}">
+                                    <f:convertNumber pattern="###,###.00" locale="pl_PL"/>
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGrid>
+                </div>
+            </p:fieldset>
+
+            <p/>
+            <p:fieldset>
+                <p:commandButton title="#{label['cancelar']}" immediate="true"
+                                 ajax="true" icon="fa icon-left-big Fs14 white"
+                                 value="#{label['voltar']}" update="@form">
+                    <pe:selectDetailLevel level="1"/>
+                </p:commandButton>
+            </p:fieldset>
+        </div>
+    </div>
+</ui:composition>

@@ -1,0 +1,27 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/pages/template/principal.xhtml">
+
+	<ui:define name="content">
+		<h:outputScript name="jquery/jquery.js" library="primefaces"
+			target="head" />
+
+		<div class="ContainerIndent">
+			<pe:masterDetail id="masterDetail" showBreadcrumb="false"
+				selectLevelListener="#{selectLevelListener.handleNavigation}">
+				<pe:masterDetailLevel level="1">
+					<h:form>
+						<ui:include src="/pages/controleAcesso/lista_parametro.xhtml" />
+					</h:form>
+				</pe:masterDetailLevel>
+				<pe:masterDetailLevel level="2">
+					<h:form>
+						<ui:include src="/pages/controleAcesso/cad_parametro.xhtml" />
+					</h:form>
+				</pe:masterDetailLevel>
+			</pe:masterDetail>
+		</div>
+	</ui:define>
+</ui:composition>

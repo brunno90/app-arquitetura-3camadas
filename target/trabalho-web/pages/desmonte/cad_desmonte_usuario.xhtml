@@ -1,0 +1,102 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+	<div class="Container100 Responsive">
+		<div class="ContainerIndent">
+			<p:fieldset legend="#{label['usuario.dados']}">
+				<h:panelGrid columns="6" cellpadding="5" id="p_pfisica">
+					<p:outputLabel for="idPerfil" value="#{label['usuario.perfil']} :" />
+					<p:selectOneMenu id="idPerfil" value="#{credenciadaView.usuario.perfil}"
+									 converter="#{modelSelectConverter}" disabled="#{not credenciadaView.editavel}">
+
+						<f:selectItems value="#{credenciadaView.listaPerfis}" var="perfil"
+									   itemLabel="#{perfil.nome}" itemValue="#{perfil}"/>
+					</p:selectOneMenu>
+
+					<p:outputLabel />
+					<p:outputLabel />
+
+					<p:outputLabel />
+					<p:outputLabel />
+
+					<p:outputLabel value="#{label['nome']} :" for="idNome" />
+					<p:inputText id="idNome" style="width: 250px"
+						value="#{credenciadaView.usuario.pessoa.nome}"
+						disabled="#{not credenciadaView.editavel}" />
+
+					<p:outputLabel value="#{label['pessoa.cpf']} :" />
+					<h:panelGroup>
+						<p:inputMask id="idCpf" mask="999.999.999-99"
+							value="#{credenciadaView.usuario.pessoa.cpf}"
+							converter="#{cgcCpfConverter}"
+							disabled="#{not credenciadaView.editavel}" required="true"
+							requiredMessage="campo CPF é obrigatório."
+							converterMessage="CPF Inválido." />
+
+						<p:commandLink title="Buscar Usuário"
+							styleClass="ui-btn icon-search-1 Fs18 default-color"
+							actionListener="#{credenciadaView.buscarUsuarioPf}"
+							partialSubmit="true" process="@this,idCpf"
+							update="@this, p_pfisica">
+						</p:commandLink>
+					</h:panelGroup>
+
+					<p:outputLabel value="#{label['pessoa.rg']} :" for="idRg" />
+					<p:inputText id="idRg"
+						value="#{credenciadaView.usuario.pessoa.documento}"
+						disabled="#{not credenciadaView.editavel}" />
+
+					<p:outputLabel value="#{label['email']} :" for="idEmailUsuario" />
+					<p:inputText id="idEmailUsuario" style="width: 250px"
+						value="#{credenciadaView.usuario.pessoa.email}"
+						disabled="#{not credenciadaView.editavel}" />
+
+					<p:outputLabel value="#{label['telefone']} :"
+						for="idTelefonePessoa" />
+					<p:inputMask mask="(99) 9999-9999?9" id="idTelefonePessoa"
+						value="#{credenciadaView.usuario.pessoa.telefone1}" size="16"
+						disabled="#{not credenciadaView.editavel}" />
+
+					<p:outputLabel value="#{label['pessoa.dataNascimento']} :" />
+					<p:calendar value="#{credenciadaView.usuario.pessoa.dataNascimento}"
+						locale="pt_BR" mask="99/99/9999" pattern="dd/MM/yyyy" navigator="true" yearRange="c-100:c+0"
+						disabled="#{not credenciadaView.editavel}" showOn="button" />
+
+					<p:outputLabel for="idCheckAtivo"
+						value="#{label['usuario.ativo']} :" />
+					<p:selectBooleanCheckbox id="idCheckAtivo"
+						value="#{credenciadaView.usuario.ativo}"
+						disabled="#{not credenciadaView.editavel}" />
+				</h:panelGrid>
+			</p:fieldset>
+			<p />
+			<p:panel>
+				<p:commandButton title="#{label['cancelar']}" immediate="true"
+					icon="fa icon-cancel Fs16 white" value="#{label['cancelar']}"
+					update="@form" style="margin-left:10%" styleClass="redButton">
+					<pe:selectDetailLevel step="-1" />
+				</p:commandButton>
+
+				<p:commandButton title="#{label['adicionar']}"
+					icon="fa icon-user-add Fs14 white"
+					styleClass="greenButton Fright20" value="#{label['adicionar']}"
+					update="@form" actionListener="#{credenciadaView.adicionarUsuario}"
+					rendered="#{credenciadaView.usuario.id eq null}">
+					<pe:selectDetailLevel step="-1" />
+				</p:commandButton>
+
+				<p:commandButton title="#{label['atualizar']}"
+					icon="fa icon-ok Fs16 white" value="#{label['atualizar']}"
+					update="@form" styleClass="greenButton Fright20"
+					rendered="#{credenciadaView.usuario.id ne null}"
+					actionListener="#{credenciadaView.atualizarUsuario}">
+					<pe:selectDetailLevel step="-1" />
+				</p:commandButton>
+			</p:panel>
+		</div>
+	</div>
+</ui:composition>

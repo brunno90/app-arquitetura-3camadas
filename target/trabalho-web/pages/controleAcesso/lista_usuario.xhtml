@@ -1,0 +1,111 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <p:panel>
+        <div class="Container100 Responsive">
+            <div class="ContainerIndent TexAlCenter">
+                <h:outputText value="#{label['usuario.cadastro']}"
+                              styleClass="FontBold Fs18 hardblue"></h:outputText>
+            </div>
+            <p:messages showDetail="false" autoUpdate="true" closable="true" escape="false"/>
+        </div>
+        <div class="Container100 Responsive">
+            <div class="ContainerIndent">
+
+                <p:fieldset legend="#{label['usuario.lista']}" styleClass="Responsive"
+                            toggleable="true">
+                    <p:dataTable id="singleDT" var="usuario"
+                                 value="#{usuarioView.lista}" rows="13" paginator="true"
+                                 paginatorPosition="bottom" emptyMessage="#{label['emptyMessage']}"
+                                 reflow="true">
+
+                        <p:column headerText="#{label['id']}" sortBy="#{usuario.id}"
+                                  style="width:40px" styleClass="TexAlCenter">
+                            <h:outputText value="#{usuario.id}"/>
+                        </p:column>
+                        <p:column headerText="#{label['nome']}"
+                                  sortBy="#{usuario.pessoa.nome}">
+                            <h:outputText value="#{usuario.pessoa.nome}"
+                                          rendered="#{not usuario.pessoa.isPj}"/>
+                            <h:outputText value="#{usuario.pessoa.nomeFantasia}"
+                                          rendered="#{usuario.pessoa.isPj}"/>
+                        </p:column>
+                        <p:column headerText="#{label['pessoa.cpfCnpj']}"
+                                  styleClass="MarRightPerc10">
+                            <h:outputText value="#{usuario.pessoa.cpf}"
+                                          rendered="#{not usuario.pessoa.isPj}"
+                                          converter="#{cgcCpfConverter}"/>
+                            <h:outputText value="#{usuario.pessoa.cnpj}"
+                                          rendered="#{usuario.pessoa.isPj}" converter="#{cgcCpfConverter}"/>
+                        </p:column>
+                        <p:column headerText="#{label['perfil']}"
+                                  sortBy="#{usuario.perfil.nome}">
+                            <h:outputText value="#{usuario.perfil.nome}"/>
+                        </p:column>
+                        <p:column headerText="#{label['email']}"
+                                  sortBy="#{usuario.pessoa.email}">
+                            <h:outputText value="#{usuario.pessoa.email}"/>
+                        </p:column>
+
+                        <p:column headerText="#{label['usuario.ativo']}"
+                                  sortBy="#{usuario.ativo}" styleClass="TexAlCenter" style="width:100px;">
+                            <h:panelGroup rendered="#{usuario.ativo}">
+                                <h:outputText value="#{label['usuario.ativo']}"/>
+                                <i class="icon-ok-circled Fs18 green Fright"/>
+                            </h:panelGroup>
+                            <h:panelGroup rendered="#{not usuario.ativo}">
+                                <h:outputText value="#{label['usuario.inativo']}"/>
+                                <i class="icon-block Fs18 red Fright"/>
+                            </h:panelGroup>
+                        </p:column>
+                        <p:column headerText="#{label['dataRegistro']}"
+                                  sortBy="#{usuario.pessoa.dataRegistro}"
+                                  styleClass="Wid200px TexAlCenter">
+                            <h:outputText value="#{usuario.pessoa.dataRegistro}">
+                                <f:convertDateTime pattern="HH:mm - dd/MM/yyyy" timeZone="#{initParam.timezone}"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{label['acoes']}"
+                                  styleClass="TexAlCenter Wid200px">
+                            <p:commandLink title="#{label['editar']}" immediate="true"
+                                           update="@all" action="#{usuarioView.detalharUsuario}"
+                                           styleClass="ui-btn Fs15 default-color">
+                                <i class="icon-edit Fs17 hardblue"></i>
+                                <pe:selectDetailLevel/>
+                                <f:setPropertyActionListener target="#{usuarioView.entidade}"
+                                                             value="#{usuario}"/>
+                            </p:commandLink>
+                            <p:commandLink title="#{label['excluir']}" immediate="true"
+                                           update="@form" action="#{usuarioView.remover}"
+                                           styleClass="ui-btn Fs15 default-color">
+                                <i class="icon-user-delete Fs16 red"></i>
+                                <f:setPropertyActionListener target="#{usuarioView.entidade}"
+                                                             value="#{usuario}"/>
+                                <p:confirm header="#{label['remover']}"
+                                           message="#{label['msg.confirm.remover']}" icon="ui-icon-alert"/>
+                            </p:commandLink>
+                        </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton title=" #{label['usuario.adicionar']}"
+                                             icon="fa icon-plus Fs14 white"
+                                             value=" #{label['usuario.adicionar']}"
+                                             actionListener="#{usuarioView.prepararNovo}" update="@form">
+                                <pe:selectDetailLevel/>
+                            </p:commandButton>
+                        </f:facet>
+                    </p:dataTable>
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="#{label['sim']}" type="button"
+                                         styleClass="ui-confirmdialog-yes" icon="fa icon-ok Fs14 white"/>
+                        <p:commandButton value="#{label['nao']}" type="button"
+                                         styleClass="ui-confirmdialog-no" icon="fa icon-cancel Fs16 white"/>
+                    </p:confirmDialog>
+                </p:fieldset>
+            </div>
+        </div>
+    </p:panel>
+</ui:composition>

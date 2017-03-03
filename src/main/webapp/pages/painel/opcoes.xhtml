@@ -1,0 +1,57 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/pages/template/principal.xhtml"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="content">
+		<h:outputScript name="jquery/jquery.js" library="primefaces"
+			target="head" />
+		<h:outputScript name="js/axlbiometrics.js" library="sentinel-layout" />
+
+		<div class="ContainerIndent">
+			<h:form>
+				<pe:masterDetail id="masterDetail" showBreadcrumb="false"
+					selectLevelListener="#{selectLevelListener.handleNavigation}">
+
+					<pe:masterDetailLevel level="1">
+						<p:panel styleClass="Container40">
+							<div class="Container100 Responsive">
+								<div class="ContainerIndent TexAlCenter">
+									<h:outputText value="#{label['painel']}"
+										styleClass="FontBold Fs18 hardblue"></h:outputText>
+								</div>
+							</div>
+							<div class="Container100 Responsive ">
+								<div class="ContainerIndent">
+									<p:fieldset styleClass="Responsive" toggleable="true">
+										<p:commandLink value="#{label['painel.redefinirSenha']}"
+											styleClass="ui-btn icon-lock-2 Fs18 default-color"
+											immediate="true" update="@form"
+											style="margin:50px 0px 20px 20px;">
+											<pe:selectDetailLevel level="2" />
+										</p:commandLink>
+										<p />
+										<p:commandLink value="#{label['painel.alterarEmail']}"
+											styleClass="ui-btn icon-mail-2 Fs18 default-color"
+											immediate="true" update="@form"
+											style="margin:20px 0px 20px 20px;">
+											<pe:selectDetailLevel level="3" />
+										</p:commandLink>
+									</p:fieldset>
+								</div>
+							</div>
+						</p:panel>
+					</pe:masterDetailLevel>
+					<pe:masterDetailLevel level="2">
+						<ui:include src="/pages/painel/redefinir_senha.xhtml" />
+					</pe:masterDetailLevel>
+					<pe:masterDetailLevel level="3">
+						<ui:include src="/pages/painel/alterar_email.xhtml" />
+					</pe:masterDetailLevel>
+				</pe:masterDetail>
+			</h:form>
+		</div>
+	</ui:define>
+</ui:composition>

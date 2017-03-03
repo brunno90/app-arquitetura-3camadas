@@ -1,0 +1,49 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/template/principal.xhtml">
+
+	<ui:define name="content">
+		<!-- SECTION 1 -->
+
+		<div class="Container100">
+			<div class="ContainerIndent">
+				<div class="EmptyBox20"></div>
+
+				<div class="Container100 Responsive">
+					<div class="ContainerIndent">
+						<p:panel style="min-height: 240px;">
+							<i class="icon-user-2 Fs50 Fleft hardblue TexAlCenter"></i>
+							<div class="Fs24 Fright MarTop10 leaden Wid90">
+								Bem-Vindo, <span class="hardblue"> <h:panelGroup
+										rendered="#{userSession.usuario.pessoa.isPj}">#{userSession.usuario.pessoa.nomeFantasia}
+										</h:panelGroup> <h:panelGroup
+										rendered="#{not userSession.usuario.pessoa.isPj}">#{userSession.usuario.pessoa.nome}</h:panelGroup>
+								</span>
+							</div>
+							<div class="Fs12 Fright leaden Wid90">
+								Você possui <span class="red">0 notificações não lidas</span> !
+							</div>
+							<div class="EmptyBox10"></div>
+							<p:separator styleClass="Wid100" />
+							<div class="EmptyBox10"></div>
+							<div class="Fs16 Fright">
+								<a href="#" class="DispInlBlock Fleft Fs16 MarRight20"><i
+									class="icon-bell-alt hardblue"> Pendências (0)</i></a> <a href="#"
+									class="DispInlBlock Fleft Fs16 MarRight20"><i
+									class="icon-cog-alt hardblue"> Operação</i></a>
+							</div>
+						</p:panel>
+					</div>
+				</div>
+
+				<div class="EmptyBox10"></div>
+			</div>
+		</div>
+		<!-- SECTION 1 -->
+
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>#{label['headerTitle']}</title>
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+
+	<h:outputScript name="js/axlbiometrics.js" library="sentinel-layout" />
+	<h:outputScript name="js/login.js" library="sentinel-layout" />
+	<h:outputScript name="js/axl.js" library="sentinel-layout" />
+
+	<h:outputStylesheet name="css/font-icon-layout.css"
+		library="sentinel-layout" />
+	<h:outputStylesheet name="css/sentinel-layout.css"
+		library="sentinel-layout" />
+	<h:outputStylesheet name="css/core-layout.css"
+		library="sentinel-layout" />
+	<h:outputStylesheet name="css/custom-login.css"
+		library="sentinel-layout" />
+
+</h:head>
+
+<h:body class="fontRegular login-back white-back" onload="logout()">
+
+	<h:form>
+		<p:remoteCommand name="logout" actionListener="#{authenticator.logout}" update="@form"/>
+	</h:form>
+
+</h:body>
+
+</html>

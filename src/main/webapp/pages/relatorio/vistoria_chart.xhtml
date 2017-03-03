@@ -1,0 +1,123 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/pages/template/principal.xhtml">
+
+    <ui:define name="content">
+        <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+        <script>
+            function limparPontos() {
+                var elmtsArray = document.getElementsByClassName("jqplot-point-label");
+                for (var i = 0; i &lt; elmtsArray.length; i++) {
+                    if (elmtsArray[i].innerHTML == '-') {
+                        elmtsArray[i].style.display = 'none';
+                    }
+                }
+            }
+        </script>
+        <div class="ContainerIndent">
+            <h:form id="form">
+                <p:panel>
+                    <div class="Container100 Responsive">
+                        <div class="ContainerIndent TexAlCenter">
+                            <h:outputText value="Índice Vistorias"
+                                          styleClass="FontBold Fs18 hardblue"></h:outputText>
+                        </div>
+                        <p:messages showDetail="false" autoUpdate="true" closable="true"/>
+                    </div>
+                    <div class="Container100 Responsive">
+                        <div class="ContainerIndent">
+                            <p/>
+                            <p:fieldset styleClass="Responsive">
+                                <h:panelGrid columns="6" cellpadding="5">
+                                    <p:outputLabel value="Ano: " for="ano"/>
+
+                                    <p:selectOneMenu id="ano" style="width:125px"
+                                                     value="#{vistoriaChartView.ano}">
+                                        <f:selectItem itemLabel="Selecione" itemValue=""/>
+                                        <f:selectItem itemLabel="2014" itemValue="2014"/>
+                                        <f:selectItem itemLabel="2015" itemValue="2015"/>
+                                        <f:selectItem itemLabel="2016" itemValue="2016"/>
+
+                                        <p:ajax event="change" update="@form"
+                                                listener="#{vistoriaChartView.createIndiceVistoria}"
+                                                oncomplete="limparPontos()"/>
+                                    </p:selectOneMenu>
+
+                                </h:panelGrid>
+                            </p:fieldset>
+
+                            <p/>
+                            <p:fieldset styleClass="Responsive" legend="Gráfico Vistorias"
+                                        rendered="#{vistoriaChartView.indiceVistoria ne null}">
+                                <h:panelGrid id="pnl" columns="6" cellpadding="5" styleClass="Container70">
+
+                                    <p:chart type="bar" model="#{vistoriaChartView.indiceVistoria}"
+                                             style="width:100%; cursor: pointer" responsive="true">
+                                        <p:ajax event="itemSelect" listener="#{vistoriaChartView.itemSelect}"
+                                                update="@form" oncomplete="limparPontos()"/>
+                                    </p:chart>
+                                </h:panelGrid>
+                                <p:outputLabel
+                                        value="Selecione um resultado no gráfico para visualizar as vistorias"
+                                        style="margin-left: 45%; text-decoration: underline; color: #0047EC"/>
+                            </p:fieldset>
+                            <p/>
+                            <p:fieldset legend="#{label['vistoria.lista']}"
+                                        rendered="#{vistoriaChartView.lista.size() > 0}"
+                                        styleClass="Responsive" toggleable="true">
+                                <h:panelGrid id="pnl2" styleClass="Container80">
+                                    <p:dataTable id="singleDT" var="vistoria"
+                                                 value="#{vistoriaChartView.lista}" rowKey="#{vistoria.id}" rows="10"
+                                                 paginator="#{vistoriaChartView.lista.size() > 10}"
+                                                 paginatorPosition="bottom" reflow="true"
+                                                 emptyMessage="#{label['emptyMessage']}">
+
+                                        <p:column headerText="#{label['vistoria.vistoriador']}"
+                                                  rendered="#{vistoria.vistoriador.pessoa.isPj}"
+                                                  sortBy="#{vistoria.vistoriador.pessoa.nomeFantasia}">
+                                            <h:outputText value="#{vistoria.vistoriador.pessoa.nomeFantasia}"/>
+                                        </p:column>
+
+                                        <p:column headerText="#{label['vistoria.vistoriador']}"
+                                                  rendered="#{!vistoria.vistoriador.pessoa.isPj}"
+                                                  sortBy="#{vistoria.vistoriador.pessoa.nome}">
+                                            <h:outputText value="#{vistoria.vistoriador.pessoa.nome}"/>
+                                        </p:column>
+
+                                        <p:column headerText="#{label['desmonte.razaoSocial']}"
+                                                  sortBy="#{vistoria.desmonte.razaoSocial}">
+                                            <h:outputText value="#{vistoria.desmonte.razaoSocial}"/>
+                                        </p:column>
+
+                                        <p:column headerText="#{label['desmonte.cnpj']}"
+                                                  sortBy="#{vistoria.desmonte.cnpj}">
+                                            <h:outputText value="#{vistoria.desmonte.cnpj}"/>
+                                        </p:column>
+
+                                        <p:column headerText="#{label['vistoria.dataAgendamento']}"
+                                                  sortBy="#{vistoria.dataRegistro}" styleClass="TexAlCenter">
+                                            <h:outputText value="#{vistoria.dataRegistro}">
+                                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                            </h:outputText>
+                                        </p:column>
+
+                                        <p:column headerText="#{label['vistoria.dataHoraVistoria']}"
+                                                  sortBy="#{vistoria.dataVistoria}" styleClass="TexAlCenter">
+                                            <h:outputText value="#{vistoria.dataVistoria}">
+                                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm"
+                                                                   timeZone="#{initParam.timezone}"/>
+                                            </h:outputText>
+                                        </p:column>
+                                    </p:dataTable>
+                                </h:panelGrid>
+                            </p:fieldset>
+                        </div>
+                    </div>
+                </p:panel>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,76 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+	<div class="Container100 Responsive">
+		<div class="ContainerIndent">
+			<p:fieldset legend="#{label['dadosGerais']}">
+				<h:panelGrid columns="2" cellpadding="5">
+					<p:outputLabel value="#{label['anexo.titulo']}: " for="titulo" />
+					<p:selectOneMenu id="titulo" value="#{credenciadaView.anexo.tipo}"
+						styleClass="Container100" disabled="#{not credenciadaView.editavel}">
+						<f:selectItems value="#{credenciadaView.tipoDocumento}" var="tipo"
+							itemLabel="#{tipo.titulo}" itemValue="#{tipo}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="#{label['anexo.descricao']}: "
+						for="descricao" />
+					<p:inputTextarea id="descricao" cols="100"
+						value="#{credenciadaView.anexo.descricao}" autoResize="true"
+						disabled="#{not credenciadaView.editavel}" />
+
+					<p:outputLabel value="Situação Documento : " rendered="#{not empty credenciadaView.anexo.aprovado}"/>
+					<h:panelGroup rendered="#{not empty credenciadaView.anexo.aprovado}">
+						<h:panelGroup rendered="#{credenciadaView.anexo.aprovado}">
+							<p:inputText value="#{label['anexo.aprovado']}" disabled="true" />
+							<i class="icon-ok-circled Fs18 green" />
+						</h:panelGroup>
+						<h:panelGroup
+							rendered="#{not empty doc.aprovado and not credenciadaView.anexo.aprovado}">
+							<p:inputText value="#{label['anexo.reprovado']}" disabled="true" />
+							<i class="icon-cancel-circled Fs18 red" />
+						</h:panelGroup>
+					</h:panelGroup>
+
+					<p:outputLabel />
+					<p:fileUpload id="but_anexo" mode="advanced"
+								  fileUploadListener="#{credenciadaView.doUpload}"
+								  allowTypes="/(\.|\/)(pdf)$/" label="Anexo" auto="true"
+								  sizeLimit="5000000"
+								  invalidSizeMessage="Tamanho do arquivo inválido. 5MB tamanho máximo"
+								  invalidFileMessage="Arquivo Inválido." update="idAnexoCad"
+								  rendered="#{credenciadaView.anexo.id == null and credenciadaView.editavel}"/>
+				</h:panelGrid>
+				<pe:documentViewer height="425" id="idAnexoCad"
+					value="#{utilView.anexo.conteudo}" style="width:80%" />
+			</p:fieldset>
+			<p />
+			<p:panel>
+				<p:commandButton title="#{label['cancelar']}" immediate="true"
+					icon="fa icon-cancel Fs16 white" value="#{label['cancelar']}"
+					update="@form" style="margin-left:10%" styleClass="redButton">
+					<pe:selectDetailLevel step="-2" />
+				</p:commandButton>
+
+				<p:commandButton title="#{label['adicionar']}"
+					icon="fa icon-ok Fs16 white" styleClass="greenButton Fright20"
+					value="#{label['adicionar']}" update="@form"
+					action="#{credenciadaView.adicionarAnexoDesmonte}"
+					rendered="#{credenciadaView.anexo.id == null and credenciadaView.editavel}">
+					<pe:selectDetailLevel step="-2" />
+				</p:commandButton>
+
+				<p:commandButton title="#{label['atualizar']}"
+					icon="fa icon-ok Fs16 white" value="#{label['atualizar']}"
+					update="@form" styleClass="greenButton Fright20"
+					action="#{credenciadaView.atualizarAnexoDesmonte}"
+					rendered="#{credenciadaView.anexo.id != null and credenciadaView.editavel}">
+					<pe:selectDetailLevel step="-2" />
+				</p:commandButton>
+			</p:panel>
+		</div>
+	</div>
+</ui:composition>

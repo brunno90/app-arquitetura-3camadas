@@ -1,0 +1,87 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	
+   	<script>connect();</script>
+    <p:remoteCommand name="loadBioRequest" actionListener="#{usuarioView.loadBioRequest()}"/>
+    <p:remoteCommand name="sendBioResponse" actionListener="#{usuarioView.capturaBiometria()}"/>
+    <p:remoteCommand name="reloadStatusDigital" update="statusDigital" global="false"/>
+    <p:remoteCommand name="showMsgErrorAxlBiometrics" actionListener="#{authenticator.msgErroAxlBiometrics()}"
+                     global="false"/>
+    <p:poll id="poll_ws_connect" widgetVar="poll_ws_connect" interval="3" autoStart="false" global="false"
+            onstart="javascript:connect();" listener="#{authenticator.msgErroAxlBiometrics()}"/>
+	
+
+	<div class="ContainerIndent">
+		<p:panel>
+			<div class="Container100 Responsive">
+				<div class="ContainerIndent TexAlCenter">
+					<h:outputText value="#{label['painel.redefinirSenha']}"
+						styleClass="FontBold Fs18 hardblue"></h:outputText>
+				</div>
+				<p:messages id="messages" autoUpdate="true" closable="true" />
+			</div>
+			<p:fieldset styleClass="Responsive">
+				<div class="Container100 Responsive">
+					<div class="ContainerIndent">
+						<h:panelGrid columns="2" cellpadding="5">
+
+							<h:outputLabel for="pwd1"
+								value="#{label['usuario.senha.atual']} :" />
+							<p:password value="#{usuarioView.senhaAtual}" required="true"
+								redisplay="true" requiredMessage="SENHA ATUAL é obrigatória." />
+
+							<h:outputLabel for="pwd1" value="#{label['usuario.senha']} :" />
+							<p:password id="pwd1" value="#{usuarioView.novaSenha}"
+								match="pwd2" required="true" redisplay="true"
+								requiredMessage="NOVA ATUAL é obrigatória."
+								validatorMessage="As senhas informadas são diferentes!" />
+
+							<h:outputLabel for="pwd2"
+								value="#{label['usuario.confirmarSenha']} :" />
+							<p:password id="pwd2" value="#{usuarioView.novaSenha}"
+								required="true" redisplay="true" />
+								
+								<h:panelGroup/>
+								<p:commandLink title="Cadastrar nova digital" onclick="return solicitarBiometria()"
+                                               global="false" style="margin-left: 100px; display: table">
+                                    <p:panel id="statusDigital">
+                                        <p:outputLabel value="Digital capturada!"
+                                                       style="color: green;"
+                                                       rendered="#{usuarioView.digitalOk}">
+                                            <i class="icon-ok-circled-green Fs14"/>
+                                        </p:outputLabel>
+
+                                        <p:outputLabel value="Digital não capturada!"
+                                                       style="color: red;"
+                                                       rendered="#{!usuarioView.digitalOk}">
+                                            <i class="icon-cancel-circled-red Fs14 TexAlCenter"/>
+                                        </p:outputLabel>
+                                    </p:panel>
+                                </p:commandLink>
+						</h:panelGrid>
+					</div>
+				</div>
+			</p:fieldset>
+			<p />
+			<p:panel>
+				<p:commandButton title="#{label['cancelar']}" immediate="true"
+					icon="fa icon-cancel Fs16 white" value="#{label['cancelar']}"
+					update="@all" style="margin-left:20px">
+					<pe:selectDetailLevel level="1" />
+				</p:commandButton>
+
+				<p:commandButton title="#{label['painel.redefinirSenha']}"
+					icon="fa icon-ok Fs16 white"
+					value="#{label['painel.redefinirSenha']}"
+					action="#{usuarioView.redefinirSenha}" update="@all"
+					style="margin-left:200px;">
+					<pe:selectDetailLevel level="1" />
+				</p:commandButton>
+			</p:panel>
+		</p:panel>
+	</div>
+</ui:composition>

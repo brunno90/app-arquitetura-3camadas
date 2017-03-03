@@ -1,0 +1,284 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <div class="Container100 Responsive">
+        <div class="ContainerIndent">
+            <div class="Container100" id="consulta-box">
+                <p:fieldset legend="#{label['notaFiscal.cadastro']}">
+                    <div class="Container90 Fnone MarAuto TexAlCenter TabContent">
+                        <h:panelGrid columns="6" cellpadding="5">
+
+                            <p:outputLabel value="#{label['notaFiscal.numero']}:" for="numero"/>
+                            <p:inputText id="numero" value="#{saidaPecaView.notaFiscal.numero}"/>
+
+                            <p:outputLabel value="#{label['notaFiscal.serie']}:" for="id_serie"/>
+                            <p:inputText id="id_serie" value="#{saidaPecaView.notaFiscal.serie}"/>
+
+                            <p:outputLabel value="#{label['notaFiscal.chave']}:" for="id_chave"/>
+                            <p:inputText id="id_chave" value="#{saidaPecaView.notaFiscal.chaveNfe}"/>
+
+                            <p:outputLabel value="#{label['notaFiscal.dataEmissao']}:" for="dt_emissao"/>
+                            <p:calendar id="dt_emissao" value="#{saidaPecaView.notaFiscal.dataEmissao}"
+                                        mask="99/99/9999" style="margin-left: 45px;" locale="pt_BR"
+                                        pattern="dd/MM/yyyy" showOn="button"/>
+
+                            <p:outputLabel value="#{label['notaFiscal.cgcCpfComprador']}:" for="idCgcCpfComprador"/>
+                            <p:inputText value="#{saidaPecaView.notaFiscal.cgcCpfComprador}"
+                                         id="idCgcCpfComprador" required="true"
+                                         requiredMessage="CNPJ / CPF Obrigatorio!"
+                                         onkeypress="mascaraMutuario(this,cpfCnpj)" maxlength="18"
+                                         onblur="clearTimeout()" converter="#{cgcCpfConverter}"
+                                         converterMessage="CPF/CNPJ Inválido."/>
+
+                            <p:outputLabel value="#{label['notaFiscal.nomeComprador']}:" for="nm_comprador"/>
+                            <p:inputText id="nm_comprador" value="#{saidaPecaView.notaFiscal.nomeComprador}"/>
+
+                            <p:outputLabel value="#{label['notaFiscal.cgcCpfVendedor']}:" for="idCgcCpfVendedor"/>
+                            <p:inputText value="#{saidaPecaView.notaFiscal.cgcCpfVendedor}"
+                                         id="idCgcCpfVendedor" required="true"
+                                         requiredMessage="CNPJ / CPF Obrigatorio!"
+                                         onkeypress="mascaraMutuario(this,cpfCnpj)" maxlength="18"
+                                         onblur="clearTimeout()" converter="#{cgcCpfConverter}"
+                                         converterMessage="CPF/CNPJ Inválido."/>
+
+                            <p:outputLabel value="#{label['notaFiscal.nomeVendedor']}:" for="nm_vendedor"/>
+                            <p:inputText id="nm_vendedor" value="#{saidaPecaView.notaFiscal.nomeVendedor}"/>
+
+                        </h:panelGrid>
+                    </div>
+                </p:fieldset>
+                <p/>
+                <p:fieldset legend="Peças Selecionadas">
+                    <div class="Container90 Fnone TexAlCenter TabContent">
+                        <h:panelGrid cellpadding="5">
+                            <p:growl id="msgs" showDetail="true"/>
+                            <p:dataTable id="idTableItemNF" var="itemNotaFiscal"
+                                         rowIndexVar="index" rowKey="#{index}" editable="true"
+                                         value="#{saidaPecaView.notaFiscal.itensNotaFiscal}"
+                                         rows="15" paginator="true" paginatorPosition="bottom"
+                                         reflow="true" styleClass="Container90">
+
+                                <p:column headerText="#" style="width:50px"
+                                          styleClass="TexAlCenter">
+                                    <h:outputText value="#{index + 1}"/>
+                                </p:column>
+
+                                <p:column headerText="#{label['itemPeca.peca']}"
+                                          sortBy="#{itemNotaFiscal.itemPeca.pecaRastreabilidade.nome}">
+                                    <h:outputText value="#{itemNotaFiscal.itemPeca.pecaRastreabilidade.nome}"/>
+                                </p:column>
+
+                                <p:column headerText="#{label['laudo.itemPeca.subSistema']}"
+                                          sortBy="#{itemNotaFiscal.itemPeca.pecaRastreabilidade.grupo.nome}">
+                                    <h:outputText
+                                            value="#{itemNotaFiscal.itemPeca.pecaRastreabilidade.grupo.nome}"/>
+                                </p:column>
+
+                                <p:column headerText="#{label['veiculo.marca']}"
+                                          sortBy="#{itemNotaFiscal.itemPeca.veiculo.modelo.marca.nome}">
+                                    <h:outputText value="#{itemNotaFiscal.itemPeca.veiculo.modelo.marca.nome}"/>
+                                </p:column>
+
+                                <p:column headerText="#{label['veiculo.modelo']}"
+                                          style="width:200px" sortBy="#{itemNotaFiscal.itemPeca.veiculo.modelo}">
+                                    <h:outputText value="#{itemNotaFiscal.itemPeca.veiculo.modelo.nome}"/>
+                                </p:column>
+
+                                <p:column headerText="#{label['veiculo.placa']}"
+                                          style="width:100px" sortBy="#{itemNotaFiscal.itemPeca.veiculo.placa}">
+                                    <h:outputText value="#{itemNotaFiscal.itemPeca.veiculo.placa}"/>
+                                </p:column>
+
+                                <p:column headerText="#{label['veiculo.anoModelo']}"
+                                          sortBy="#{itemNotaFiscal.itemPeca.veiculo.anoModelo}">
+                                    <h:outputText value="#{itemNotaFiscal.itemPeca.veiculo.anoModelo}"/>
+                                </p:column>
+
+                                <p:column headerText="#{label['itemNotaFiscal.preco']}">
+                                    <pe:inputNumber id="preco" value="#{itemNotaFiscal.preco}" symbol="R$ "/>
+                                </p:column>
+                                <p:column style="width:60px">
+                                    <p:commandLink title="#{label['remover']}" immediate="true"
+                                                   update=":form:idTableItemNF :form:idDataTableItem"
+                                                   actionListener="#{saidaPecaView.excluirItemNotaFiscal(itemNotaFiscal)}"
+                                                   styleClass="ui-btn Fs15 default-color">
+                                        <i class="icon-minus-squared Fs15 red"></i>
+                                    </p:commandLink>
+                                </p:column>
+                                <f:facet name="footer">
+                                    <p:commandButton title="#{label['itemNotaFiscal.adicionarItem']}"
+                                                     icon="fa icon-user-add Fs16 white" immediate="true"
+                                                     value="#{label['itemNotaFiscal.adicionarItem']}"
+                                                     update=":form:idDataTableItem :form:pnl_filter"
+                                                     action="#{saidaPecaView.prepararNovoItem()}"
+                                                     onclick="PF('dlgPeca').show();">
+                                    </p:commandButton>
+                                </f:facet>
+                            </p:dataTable>
+                        </h:panelGrid>
+                    </div>
+                </p:fieldset>
+
+                <p:dialog id="dlg_addPeca" widgetVar="dlgPeca" modal="true" closeOnEscape="true"
+                          header="#{label['itemNotaFiscal.adicionarItem']}"
+                          width="50%" height="450px" resizable="false">
+
+                    <p:fieldset legend="Filtros Consulta">
+                        <div class="Container90 Fnone MarAuto TabContent">
+                            <h:panelGrid id="pnl_filter" columns="5" cellpadding="5">
+
+                                <p:outputLabel value="Tipo Veiculo" for="idTipoVeiculo"/>
+
+                                <p:selectOneMenu id="idTipoVeiculo"
+                                                 value="#{saidaPecaView.catVeiculoSelecionado}"
+                                                 style="width:125px" converter="#{modelSelectConverter}">
+
+                                    <f:selectItem itemLabel="Selecione" noSelectionOption="true"/>
+
+                                    <f:selectItems value="#{saidaPecaView.listaCategorias}"
+                                                   var="categoria"
+                                                   itemLabel="#{categoria.categoria} - #{categoria.nome}"
+                                                   itemValue="#{categoria}"/>
+
+                                    <p:ajax event="change"
+                                            listener="#{saidaPecaView.findPecaByCategoria()}"
+                                            update="id_peca :form:idDataTableItem">
+                                    </p:ajax>
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Peças" for="id_peca"/>
+
+                                <p:selectOneMenu id="id_peca"
+                                                 value="#{saidaPecaView.pecaSelecionada}" style="width:125px"
+                                                 converter="#{modelSelectConverter}" filter="true">
+
+                                    <f:selectItem itemLabel="Selecione" noSelectionOption="true"/>
+
+                                    <f:selectItems
+                                            value="#{saidaPecaView.listaPecaRastreabilidades}" var="item"
+                                            itemLabel="#{item.nome}" itemValue="#{item}"/>
+
+                                    <p:ajax event="change"
+                                            listener="#{saidaPecaView.findPecaByTipoPeca()}"
+                                            update=":form:idDataTableItem">
+                                    </p:ajax>
+                                </p:selectOneMenu>
+
+                                <p/>
+                                <p:outputLabel value="#{label['veiculo.marca']} :"/>
+                                <p:selectOneMenu id="idMarca" style="width:125px" filter="true"
+                                                 value="#{saidaPecaView.marcaSelecionada}"
+                                                 converter="#{modelSelectConverter}">
+
+                                    <f:selectItem itemLabel="Selecione" noSelectionOption="true"/>
+
+                                    <f:selectItems value="#{entradaVeiculoView.listaMarcas}" var="marca"
+                                                   itemLabel="#{marca.nome}" itemValue="#{marca}"/>
+
+                                    <p:ajax event="change"
+                                            listener="#{saidaPecaView.aplicarFiltroByMarca}"
+                                            update="idModelo :form:idDataTableItem"/>
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="#{label['veiculo.modelo']} :"/>
+                                <p:selectOneMenu id="idModelo" style="width:125px"
+                                                 filter="true" value="#{saidaPecaView.modeloSelecionada}"
+                                                 converter="#{modelSelectConverter}">
+
+                                    <f:selectItem itemLabel="Selecione" noSelectionOption="true"/>
+
+                                    <f:selectItems value="#{saidaPecaView.listaModelos}"
+                                                   var="modelo" itemLabel="#{modelo.nome}"
+                                                   itemValue="#{modelo}"/>
+
+                                    <p:ajax event="change"
+                                            listener="#{saidaPecaView.aplicarFiltroByModelo}"
+                                            update=":form:idDataTableItem"/>
+                                </p:selectOneMenu>
+                            </h:panelGrid>
+                        </div>
+                    </p:fieldset>
+                    <p/>
+                    <p:fieldset legend="Peças Disponíveis">
+                        <div class="Container100 Fnone MarAuto TabContent">
+                            <h:panelGrid>
+                                <p:dataTable id="idDataTableItem" var="itemPeca"
+                                             rowIndexVar="index" style="width: 100%"
+                                             value="#{saidaPecaView.tabelaItemPeca.listItem}"
+                                             selection="#{saidaPecaView.tabelaItemPeca.selectedItem}"
+                                             selectionMode="single" rowKey="#{itemPeca.id}" rows="10"
+                                             paginator="true" paginatorPosition="bottom" reflow="true"
+                                             styleClass="Container90">
+
+                                    <p:column headerText="#" style="width:50px"
+                                              styleClass="TexAlCenter">
+                                        <h:outputText value="#{index + 1}"/>
+                                    </p:column>
+
+                                    <p:column headerText="#{label['itemPeca.peca']}"
+                                              sortBy="#{itemPeca.pecaRastreabilidade.nome}">
+                                        <h:outputText value="#{itemPeca.pecaRastreabilidade.nome}"/>
+                                    </p:column>
+
+                                    <p:column headerText="#{label['veiculo.marca']}"
+                                              sortBy="#{itemPeca.veiculo.modelo.marca.nome}">
+                                        <h:outputText value="#{itemPeca.veiculo.modelo.marca.nome}"/>
+                                    </p:column>
+
+                                    <p:column headerText="#{label['veiculo.modelo']}"
+                                              style="width:250px" sortBy="#{itemPeca.veiculo.modelo}">
+                                        <h:outputText value="#{itemPeca.veiculo.modelo.nome}"/>
+                                    </p:column>
+
+                                    <p:column headerText="#{label['veiculo.placa']}"
+                                              sortBy="#{itemPeca.veiculo.placa}">
+                                        <h:outputText value="#{itemPeca.veiculo.placa}"/>
+                                    </p:column>
+
+                                    <p:column headerText="#{label['veiculo.anoModelo']}"
+                                              sortBy="#{itemPeca.veiculo.anoModelo}">
+                                        <h:outputText value="#{itemPeca.veiculo.anoModelo}"/>
+                                    </p:column>
+
+                                    <p:column headerText="#{label['acoes']}">
+                                        <p:commandLink title="#{label['adicionar']}" immediate="true"
+                                                       actionListener="#{saidaPecaView.selecionarItemPeca(itemPeca)}"
+                                                       styleClass="ui-btn Fs15 default-color"
+                                                       update=":form:idTableItemNF :form:idDataTableItem">
+                                            <i class="icon-plus Fs17 green"></i>
+                                        </p:commandLink>
+                                    </p:column>
+
+                                </p:dataTable>
+                            </h:panelGrid>
+                        </div>
+                    </p:fieldset>
+                    <p/>
+                    <p:fieldset>
+                        <p:commandButton title="Fechar" immediate="true"
+                                         icon="fa icon-cancel Fs16 white" value="Fechar"
+                                         style="float:right; margin-right:10%" onclick="PF('dlgPeca').hide();">
+                        </p:commandButton>
+                    </p:fieldset>
+
+                </p:dialog>
+                <p/>
+                <p:fieldset>
+                    <p:commandButton title="#{label['cancelar']}" immediate="true"
+                                     icon="fa icon-cancel Fs16 white" value="#{label['cancelar']}"
+                                     update="@form" style="margin-left:10%" styleClass="redButton">
+                        <pe:selectDetailLevel step="-1"/>
+                    </p:commandButton>
+                    <p:commandButton title="Confirmar" icon="fa icon-ok Fs16 white"
+                                     update="@all" value="Confirmar" style="float:right; margin-right:10%"
+                                     ajax="true" rendered="#{saidaPecaView.notaFiscal.id eq null}"
+                                     action="#{saidaPecaView.registrarSaidaPeca()}"/>
+                </p:fieldset>
+            </div>
+        </div>
+    </div>
+</ui:composition>

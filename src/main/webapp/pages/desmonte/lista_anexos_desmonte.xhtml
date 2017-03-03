@@ -1,0 +1,92 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <div class="Container100 Responsive">
+        <div class="ContainerIndent">
+            <p:fieldset legend="#{label['anexos']}" toggleable="true">
+                <p:dataTable id="anexos" var="doc"
+                             value="#{credenciadaView.entidade.listaAnexo}" rows="10"
+                             paginator="true" paginatorPosition="bottom"
+                             emptyMessage="#{label['emptyMessage']}" reflow="true">
+
+                    <p:ajax event="rowSelect" oncomplete="PF('dlg').show();"
+                            process="anexos" update="@form"/>
+
+                    <p:column headerText="#{label['id']}" sortBy="#{doc.id}"
+                              style="width:40px" styleClass="TexAlCenter">
+                        <h:outputText value="#{doc.id}"/>
+                    </p:column>
+                    <p:column headerText="#{label['anexo.titulo']}"
+                              sortBy="#{doc.titulo}">
+                        <h:outputText value="#{doc.titulo}"/>
+                    </p:column>
+                    <p:column headerText="#{label['descricao']}">
+                        <h:outputText value="#{doc.descricao}"/>
+                    </p:column>
+                    <p:column headerText="#{label['acoes']}" styleClass="TexAlCenter">
+                        <p:commandLink title="#{label['detalhar']}"
+                                       styleClass="ui-btn icon-search Fs15 default-color"
+                                       immediate="true" update="@form"
+                                       action="#{credenciadaView.detalharAnexoDesmonte}">
+                            <pe:selectDetailLevel level="4" preserveInputs="@all"/>
+                            <f:setPropertyActionListener target="#{credenciadaView.anexo}"
+                                                         value="#{doc}"/>
+                            <f:setPropertyActionListener target="#{utilView.anexo}"
+                                                         value="#{doc}"/>
+                            <f:setPropertyActionListener target="#{credenciadaView.editavel}"
+                                                         value="false"/>
+                        </p:commandLink>
+
+                        <p:commandLink title="#{label['editar']}"
+                                       styleClass="ui-btn Fs15 default-color" immediate="true"
+                                       update="@form" rendered="#{p:ifGranted('EDIT_ANEXO_DESMONTE')}"
+                                       action="#{credenciadaView.detalharAnexoDesmonte}">
+                            <i class="icon-edit Fs17 hardblue"></i>
+                            <pe:selectDetailLevel level="4" preserveInputs="@all"/>
+                            <f:setPropertyActionListener target="#{credenciadaView.anexo}"
+                                                         value="#{doc}"/>
+                            <f:setPropertyActionListener target="#{utilView.anexo}"
+                                                         value="#{doc}"/>
+                            <f:setPropertyActionListener target="#{credenciadaView.editavel}"
+                                                         value="true"/>
+                        </p:commandLink>
+
+                        <p:commandLink title="#{label['excluir']}" immediate="true"
+                                       update="@form" action="#{credenciadaView.removerAnexoDesmonte}"
+                                       styleClass="ui-btn Fs15 default-color"
+                                       rendered="#{p:ifGranted('DEL_ANEXO_DESMONTE')}">
+                            <i class="icon-eraser Fs16 red"></i>
+                            <pe:selectDetailLevel step="0"/>
+                            <f:setPropertyActionListener target="#{credenciadaView.anexo}"
+                                                         value="#{doc}"/>
+                            <p:confirm header="#{label['remover']}"
+                                       message="#{label['msg.confirm.remover']}" icon="ui-icon-alert"/>
+                        </p:commandLink>
+                    </p:column>
+
+                    <f:facet name="footer">
+                        <p:commandButton title="#{label['anexo.adicionar']}"
+                                         icon="fa icon-doc-add Fs16 white" immediate="true" update="@form"
+                                         value="#{label['anexo.adicionar']}"
+                                         rendered="#{p:ifGranted('ADD_ANEXO_DESMONTE')}"
+                                         actionListener="#{credenciadaView.prepararNovoAnexo}">
+                            <pe:selectDetailLevel level="4" preserveInputs="@all"/>
+                            <f:setPropertyActionListener target="#{credenciadaView.editavel}"
+                                                         value="true"/>
+                        </p:commandButton>
+                    </f:facet>
+                </p:dataTable>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="#{label['sim']}"
+                                     styleClass="ui-confirmdialog-yes" icon="fa icon-ok Fs16 white"/>
+                    <p:commandButton value="#{label['nao']}"
+                                     styleClass="ui-confirmdialog-no" icon="fa icon-cancel Fs16 white"/>
+                </p:confirmDialog>
+            </p:fieldset>
+        </div>
+    </div>
+</ui:composition>

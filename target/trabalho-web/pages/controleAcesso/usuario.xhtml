@@ -1,0 +1,24 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="/pages/template/principal.xhtml">
+
+    <ui:define name="content">
+        <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+        <h:outputScript name="js/axlbiometrics.js" library="sentinel-layout"/>
+        <div class="ContainerIndent">
+            <h:form id="form">
+                <pe:masterDetail id="masterDetail" showBreadcrumb="false"
+                                 selectLevelListener="#{selectLevelListener.handleNavigation}">
+                    <pe:masterDetailLevel level="1">
+                        <ui:include src="/pages/controleAcesso/lista_usuario.xhtml"/>
+                    </pe:masterDetailLevel>
+                    <pe:masterDetailLevel level="2">
+                        <ui:include src="/pages/controleAcesso/cad_usuario.xhtml"/>
+                    </pe:masterDetailLevel>
+                </pe:masterDetail>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

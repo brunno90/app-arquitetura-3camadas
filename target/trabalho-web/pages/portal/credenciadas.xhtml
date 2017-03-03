@@ -1,0 +1,164 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/pages/template/portal.xhtml">
+
+	<ui:define name="content">
+		<h:outputScript name="jquery/jquery.js" library="primefaces"
+			target="head" />
+		<div class="ContainerIndent Container40 white-back" style="margin-left: 15%">
+
+			<h:form id="frmDesmonte" enctype="multipart/form-data">
+				<p:panel>
+					<div class="Container100 Responsive">
+						<div class="ContainerIndent TexAlCenter">
+							<h:outputText value="Cadastro Denúncia"
+								styleClass="FontBold Fs18 hardblue"></h:outputText>
+						</div>
+						<p:messages autoUpdate="true" closable="true" escape="false" />
+					</div>
+					<div class="Container100 Responsive">
+						<div class="ContainerIndent">
+							<p:fieldset legend="Denunciante" styleClass="Container100">
+								<h:panelGrid columns="2" cellpadding="5">
+
+									<p:outputLabel value="#{label['denuncia.nomeDenunciante']} :"
+										for="nomeDenunciante" />
+									<p:inputText id="nomeDenunciante"
+										value="#{denunciaView.entidade.nomeDenunciante}" size="50" />
+								</h:panelGrid>
+
+								<h:panelGrid columns="4" cellpadding="5">
+									<p:outputLabel
+										value="#{label['denuncia.telefoneDenunciante']} :"
+										for="telefoneDenunciante" />
+									<p:inputMask mask="(99) 9999-9999?9" id="telefoneDenunciante"
+										value="#{denunciaView.entidade.telefoneDenunciante}" />
+
+									<p:outputLabel value="#{label['denuncia.emailDenunciante']} :"
+										for="emailDenunciante" />
+									<p:inputText id="emailDenunciante"
+										value="#{denunciaView.entidade.emailDenunciante}" />
+								</h:panelGrid>
+							</p:fieldset>
+							<p />
+							<p:fieldset legend="Denúncia">
+								<h:panelGrid columns="6" cellpadding="5">
+									<p:outputLabel value="#{label['endereco.estado']} :"
+										for="idEstado" />
+									<p:selectOneMenu id="idEstado"
+										value="#{denunciaView.estadoSelecionado}"
+										style="min-width:110px;" converter="#{modelSelectConverter}">
+										<f:selectItems value="#{denunciaView.listaEstado}"
+													   var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}" />
+
+										<p:ajax event="change"
+											listener="#{denunciaView.listarCidadesOnChange}"
+											update="idCidade" />
+									</p:selectOneMenu>
+
+									<p:outputLabel value="#{label['endereco.cidade']} :"
+										for="idCidade" />
+									<p:selectOneMenu id="idCidade"
+										value="#{denunciaView.entidade.endereco.cidade}"
+										style="min-width:110px;" converter="#{modelSelectConverter}">
+										<f:selectItems value="#{denunciaView.listaCidade}"
+													   var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}" />
+									</p:selectOneMenu>
+
+									<p:outputLabel value="#{label['endereco.cep']} :" for="idCep" />
+									<p:inputMask mask="99999-999" id="idCep"
+										value="#{denunciaView.entidade.endereco.cep}" size="16" />
+
+									<p:outputLabel value="#{label['endereco.bairro']} :"
+										for="idBairro" />
+									<p:inputText id="idBairro"
+										value="#{denunciaView.entidade.endereco.bairro}" />
+
+									<p:outputLabel value="#{label['endereco.logradouro']} :"
+										for="idLogradouro" />
+									<p:inputText id="idLogradouro" required="true"
+										requiredMessage="Informar Logradouro"
+										value="#{denunciaView.entidade.endereco.logradouro}" />
+
+									<p:outputLabel value="#{label['endereco.complemento']} :"
+										for="idComplemento" />
+									<p:inputText id="idComplemento"
+										value="#{denunciaView.entidade.endereco.complemento}" />
+
+									<p:outputLabel value="#{label['endereco.numero']} :"
+										for="idNumero" />
+									<p:inputText id="idNumero"
+										value="#{denunciaView.entidade.endereco.numero}" />
+								</h:panelGrid>
+								<p />
+								<h:panelGrid columns="1" cellpadding="5" styleClass="Wid70">
+									<p:outputLabel value="#{label['denuncia']} :" for="denuncia" />
+									<p:inputTextarea id="denuncia" styleClass="Wid100"
+										value="#{denunciaView.entidade.denuncia}" rows="8" />
+								</h:panelGrid>
+							</p:fieldset>
+							<p />
+							<p:fieldset legend="Fotos de Evidências" id="idLegendFoto">
+								<h:panelGrid columns="1" styleClass="Container100">
+									<ui:repeat value="#{denunciaView.entidade.listaAnexo}"
+										var="anexo">
+										<div style="width: 200px; float: left; margin: 2px; border: 5px solid #0b66b1; border-radius: 10px;">
+											<p:graphicImage value="/temp/#{anexo.titulo}" cache="false"
+												width="200" style="float:left" />
+											<p:commandLink
+												style="margin-left: -20px; background-color: black; position: absolute;"
+												title="#{label['remover']}" update="@form"
+												actionListener="#{denunciaView.removerFoto(anexo)}"
+												immediate="true">
+												<span class="fa icon-cancel Fs14 red"></span>
+												<p:confirm header="#{label['remover']}"
+													message="#{label['msg.confirm.foto.remover']}"
+													icon="ui-icon-alert" />
+											</p:commandLink>
+										</div>
+									</ui:repeat>
+									<p:confirmDialog global="true" showEffect="fade"
+										hideEffect="fade">
+										<p:commandButton value="#{label['sim']}" type="button"
+											styleClass="ui-confirmdialog-yes"
+											icon="fa icon-ok Fs16 white" />
+										<p:commandButton value="#{label['nao']}" type="button"
+											styleClass="ui-confirmdialog-no"
+											icon="fa icon-cancel Fs16 white" />
+									</p:confirmDialog>
+									<p:fileUpload
+										fileUploadListener="#{denunciaView.adicionarFoto}"
+										mode="advanced" update="idLegendFoto" auto="true"
+										label="Adicionar Foto" />
+								</h:panelGrid>
+							</p:fieldset>
+							<p />
+							<p:fieldset>
+								<p:captcha label="Captcha" />
+							</p:fieldset>
+							<p/>
+							<p:fieldset>
+								<p:commandButton title="#{label['cancelar']}" immediate="true"
+									icon="fa icon-cancel Fs16 white" value="#{label['cancelar']}"
+									update="@form" style="margin-left:10%" styleClass="redButton"
+									actionListener="#{denunciaView.voltar}">
+								</p:commandButton>
+
+								<p:commandButton title="#{label['adicionar']}"
+									icon="fa icon-ok Fs16 white" styleClass="greenButton Fright"
+									value="#{label['adicionar']}" update="@form"
+									actionListener="#{denunciaView.adicionar}"
+									action="#{denunciaView.voltar}">
+								</p:commandButton>
+							</p:fieldset>
+						</div>
+					</div>
+				</p:panel>
+			</h:form>
+		</div>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,113 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <div class="Container100 Responsive white-back">
+        <div class="ContainerIndent">
+            <div class="Container100" id="consulta-box">
+                <p:fieldset legend="Informações do Desmonte">
+                    <h:panelGrid columns="4" cellpadding="5">
+
+                        <p:outputLabel value="#{label['desmonte.nomeFantasia']} :"/>
+                        <p:outputLabel style="color: #27AAE1;"
+                                       value="#{itemPecaView.laudoTecnico.desmonte.nomeFantasia}"/>
+
+                        <p:outputLabel value="#{label['desmonte.cnpj']} :"/>
+                        <p:outputLabel style="color: #27AAE1;"
+                                       value="#{itemPecaView.laudoTecnico.desmonte.cnpj}"/>
+
+                        <p:outputLabel value="#{label['endereco.logradouro']} :"/>
+                        <p:outputLabel style="color: #27AAE1;"
+                                       value="#{itemPecaView.laudoTecnico.desmonte.endereco.logradouro}"/>
+
+                        <p:outputLabel value="#{label['endereco.complemento']} :"/>
+                        <p:outputLabel style="color: #27AAE1;"
+                                       value="#{itemPecaView.laudoTecnico.desmonte.endereco.complemento}"/>
+
+                        <p:outputLabel value="#{label['endereco.bairro']} :"/>
+                        <p:outputLabel style="color: #27AAE1;"
+                                       value="#{itemPecaView.laudoTecnico.desmonte.endereco.bairro}"/>
+
+                        <p:outputLabel value="#{label['endereco.cidade']} :"/>
+                        <p:outputLabel style="color: #27AAE1;"
+                                       value="#{itemPecaView.laudoTecnico.desmonte.endereco.cidade.nome} - #{itemPecaView.laudoTecnico.desmonte.endereco.cidade.estado.uf}"/>
+                    </h:panelGrid>
+                </p:fieldset>
+                <p/>
+                <p:fieldset legend="Informações do veículo">
+                    <h:panelGrid columns="4" cellpadding="5">
+
+                        <p:outputLabel value="Tipo Veiculo" for="idTpVeiculo"/>
+                        <p:outputLabel id="idTpVeiculo" style="color: #27AAE1;"
+                                       value="#{itemPecaView.entidade.veiculo.categoria.nome}"/>
+
+                        <p:outputLabel value="Peças" for="idPeca"/>
+                        <p:outputLabel style="color: #27AAE1;" id="idPeca"
+                                       value="#{itemPecaView.entidade.pecaRastreabilidade.nome}"/>
+
+                        <p:outputLabel value="#{label['veiculo.marca']} :" for="idPlaca"/>
+                        <p:outputLabel style="color: #27AAE1;" id="idPlaca"
+                                       value="#{itemPecaView.entidade.veiculo.placa}"/>
+
+                        <p:outputLabel value="#{label['veiculo.cor']} :"/>
+                        <p:outputLabel style="color: #27AAE1;"
+                                       value="#{itemPecaView.entidade.veiculo.cor}"/>
+
+                        <p:outputLabel value="#{label['veiculo.marca']} :" for="idMarca"/>
+                        <p:outputLabel style="color: #27AAE1;" id="idMarca"
+                                       value="#{itemPecaView.entidade.veiculo.modelo.marca.nome}"/>
+
+                        <p:outputLabel value="#{label['veiculo.modelo']}:" for="idModelo"/>
+                        <p:outputLabel style="color: #27AAE1;" id="idModelo"
+                                       value="#{itemPecaView.entidade.veiculo.modelo.nome}"/>
+
+                        <p:outputLabel value="#{label['veiculo.anoFabricacao']}:"/>
+                        <p:outputLabel style="color: #27AAE1;"
+                                       value="#{itemPecaView.entidade.veiculo.anoFabricacao}"/>
+
+                        <p:outputLabel value="#{label['veiculo.anoModelo']}:"/>
+                        <p:outputLabel style="color: #27AAE1;"
+                                       value="#{itemPecaView.entidade.veiculo.anoModelo}"/>
+
+                    </h:panelGrid>
+                </p:fieldset>
+                <p/>
+                <p:fieldset legend="#{label['veiculo.fotos']}">
+                    <!-- DADOS FOTOS VEICULO -->
+                    <h:panelGrid id="idLegendFoto" columns="1" styleClass="Container100">
+
+                        <ui:repeat value="#{itemPecaView.entidade.veiculo.listaAnexo}" var="anexo">
+                            <div style="width: 200px; float: left; margin: 2px; border: 5px solid #0b66b1; border-radius: 10px;">
+                                <p:commandLink
+                                        actionListener="#{itemPecaView.setFotoSelecionada(anexo)}"
+                                        title="#{label['visualizar']}" update="@form:dlg_image"
+                                        ajax="true" oncomplete="PF('dlg_image').show();" immediate="true">
+                                    <p:graphicImage value="/temp/#{anexo.titulo}" cache="false"
+                                                    width="200" style="float:left; cursor: pointer"/>
+                                </p:commandLink>
+                            </div>
+                        </ui:repeat>
+                    </h:panelGrid>
+                    <p:dialog header="Foto" id="dlg_image" styleClass="dlg_image"
+                              minWidth="300" minHeight="300" closeOnEscape="true"
+                              widgetVar="dlg_image" modal="false" resizable="false">
+                        <p:graphicImage id="gci_foto"
+                                        value="/temp/#{itemPecaView.fotoSelecionada.titulo}"
+                                        height="560"
+                                        rendered="#{itemPecaView.fotoSelecionada != null}"/>
+                    </p:dialog>
+                </p:fieldset>
+                <p/>
+                <p:fieldset>
+                    <p:commandButton title="#{label['voltar']}" immediate="true" update="@all"
+                                     icon="fa icon-left-big Fs14 white" value="#{label['voltar']}">
+                        <pe:selectDetailLevel level="1"/>
+                    </p:commandButton>
+                </p:fieldset>
+
+            </div>
+        </div>
+    </div>
+</ui:composition>

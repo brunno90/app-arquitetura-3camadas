@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>#{label['headerTitle']}</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+
+    <h:outputScript name="js/login.js" library="sentinel-layout"/>
+
+    <h:outputStylesheet name="css/font-icon-layout.css"
+                        library="sentinel-layout"/>
+    <h:outputStylesheet name="css/sentinel-layout.css"
+                        library="sentinel-layout"/>
+    <h:outputStylesheet name="css/core-layout.css"
+                        library="sentinel-layout"/>
+    <h:outputStylesheet name="css/custom-login.css"
+                        library="sentinel-layout"/>
+
+</h:head>
+
+<h:body class="fontRegular login-back white-back" onload="connect()">
+    <p:dialog modal="true" widgetVar="statusDialog" header="Carregando..."
+              styleClass="dlg-ajax-status"
+              style="background: transparent; border:none;" draggable="false"
+              closable="false" resizable="false">
+        <h:graphicImage value="/resources/images/loading.gif" height="100"/>
+        <p:outputLabel value="Efetuando login..."
+                       style="text-align: center; width: 100px; margin: 0 !important; color: #fff"/>
+    </p:dialog>
+
+    <p:dialog modal="true" widgetVar="statusBioDialog"
+              header="Carregando..." styleClass="dlg-ajax-status"
+              style="background: transparent; border:none;" draggable="false"
+              closable="false" resizable="false">
+        <h:graphicImage value="/resources/images/loading.gif" height="100"/>
+        <p:outputLabel value="Aguardando Digital..."
+                       style="text-align: center; width: 100px; margin: 0 !important; color: #fff"/>
+    </p:dialog>
+
+    <div
+            class="Container80 MaxWid500 Fnone MarAuto TexAlCenter PaddingTopPercent7">
+        <!--<span class="softblue"><p:graphicImage-->
+        <!--value="/resources/images/logo-alfa.jpeg" height="112px" width="200px" /></span>-->
+        <div class="EmptyBox10"></div>
+    </div>
+
+    <!-- LOGIN BOX COVER START -->
+    <h:form id="form">
+        <p:remoteCommand name="loadBioRequest"
+                         actionListener="#{authenticator.loadBioRequest()}"/>
+        <p:remoteCommand name="sendBioResponse"
+                         actionListener="#{authenticator.loginByBiometria()}"/>
+        <p:remoteCommand name="showMsgErrorAxlBiometrics"
+                         actionListener="#{authenticator.msgErroAxlBiometrics()}"
+                         global="false"/>
+        <p:poll id="poll_ws_connect" widgetVar="poll_ws_connect" interval="3"
+                autoStart="false" global="false" onstart="javascript:connect();"
+                listener="#{authenticator.msgErroAxlBiometrics()}"/>
+        <p:focus context="form"/>
+
+        <div class="Container80 MaxWid500 white-back Fnone MarAuto BordRad10"
+             id="login-box">
+            <div class="Container100">
+                <div
+                        class="Container50 TexAlCenter Animated05 BoxSizeBorder TabBtn left TabBtnActiveLeft"
+                        role="1">
+                    <div class="Container80 Fnone MarAuto FontBold">
+                        <i class="icon-lock"></i> Login
+                    </div>
+                </div>
+                <div
+                        class="Container50 TexAlCenter Animated05 BoxSizeBorder TabBtn right"
+                        role="2">
+                    <div class="Container80 Fnone MarAuto FontBold">
+                        <i class=" icon-globe-1"></i> Portal
+                    </div>
+                </div>
+
+                <div class="Container90 Fnone MarAuto TexAlCenter TabContent"
+                     id="TAB1">
+
+                    <p:messages id="msg" autoUpdate="true" escape="false"/>
+
+                    <div class="EmptyBox50"></div>
+
+                    <p:inputText placeholder="Usuário" value="#{authenticator.login}"
+                                 id="idLogin" styleClass="Container80 Fnone MarAuto Fs18"
+                                 required="true"
+                                 requiredMessage="#{label['login.usuarioObrigatorio']}"
+                                 onkeypress="mascaraMutuario(this,cpfCnpj)" maxlength="18"
+                                 onblur="clearTimeout()" converter="#{cgcCpfConverter}"
+                                 converterMessage="CPF/CNPJ Inválido."/>
+
+                    <div class="EmptyBox10"></div>
+
+                    <h:panelGrid columns="2" style="margin-left: 10px; width: 95%">
+
+                        <p:password placeholder="Senha" value="#{authenticator.password}"
+                                    styleClass="Container80 Fnone MarAuto Fs18" feedback="false"
+                                    onkeypress="if (event.keyCode == 13) { document.getElementById('form:but_login').click(); return false; }"/>
+
+                    </h:panelGrid>
+
+                    <div class="EmptyBox10"></div>
+                    <div class="Container85 Fnone MarAuto softgray">
+                        <p:link styleClass="Fleft" style="color: #133DFD !important"
+                                value="Não consegue acessar sua conta?"/>
+                    </div>
+                    <div class="EmptyBox30"></div>
+                    <p:commandButton id="but_login" value="Acessar" styleClass="Fs16"
+                                     onstart="PF('statusDialog').show()"
+                                     actionListener="#{authenticator.loginBySenha}" update=":form:msg"/>
+
+                    <div class="EmptyBox50"></div>
+                </div>
+
+                <div
+                        class="Container90 Fnone MarAuto DispNone TexAlCenter TabContent"
+                        id="TAB2">
+                    <h:form>
+                        <div class="EmptyBox50"></div>
+                        <p:commandButton title="Denunciar"
+                                         icon="fa icon-phone-squared Fs20 white"
+                                         style="background: linear-gradient(to bottom, rgb(255, 102, 0) 0%, rgb(255, 102, 0) 100%) !important"
+                                         value="Denunciar" immediate="true"
+                                         actionListener="#{denunciaView.denunciar}"/>
+
+                        <div class="EmptyBox50"></div>
+
+                        <p:commandButton title="Solicitação"
+                                         icon="fa icon-flag Fs20 white"
+                                         style="background: linear-gradient(to bottom, rgb(255, 102, 0) 0%, rgb(255, 102, 0) 100%) !important"
+                                         value="Solicitação" immediate="true"
+                                         actionListener="#{credenciadaView.prepararSolicitacaoRegistro}"/>
+
+                        <div class="EmptyBox50"></div>
+
+                        <p:commandButton title="Consultar Peça"
+                                         icon="fa icon-cog-alt-menu Fs20 white"
+                                         style="background: linear-gradient(to bottom, rgb(255, 102, 0) 0%, rgb(255, 102, 0) 100%) !important"
+                                         value="Consultar Peça" immediate="true"
+                                         actionListener="#{itemPecaView.prepararBuscaPeca}"/>
+
+                        <div class="EmptyBox50"></div>
+
+                    </h:form>
+                </div>
+            </div>
+
+        </div>
+    </h:form>
+    <!-- LOGIN BOX COVER END -->
+</h:body>
+
+</html>

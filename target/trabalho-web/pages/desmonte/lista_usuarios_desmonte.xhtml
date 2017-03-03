@@ -1,0 +1,118 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <div class="Container100 Responsive">
+        <div class="ContainerIndent">
+            <p:fieldset legend="#{label['usuario.lista']}" styleClass="Responsive"
+                        toggleable="true">
+                <p:dataTable var="usuario"
+                             value="#{credenciadaView.entidade.listaUsuario}" rows="15"
+                             paginator="true" paginatorPosition="bottom"
+                             emptyMessage="#{label['emptyMessage']}" reflow="true">
+
+                    <p:column headerText="#{label['id']}" sortBy="#{usuario.id}"
+                              style="width:40px" styleClass="TexAlCenter">
+                        <h:outputText value="#{usuario.id}"/>
+                    </p:column>
+
+                    <p:column headerText="#{label['nome']}"
+                              sortBy="#{usuario.pessoa.nome}">
+                        <h:outputText value="#{usuario.pessoa.nome}"
+                                      rendered="#{not usuario.pessoa.isPj}"/>
+                        <h:outputText value="#{usuario.pessoa.nomeFantasia}"
+                                      rendered="#{usuario.pessoa.isPj}"/>
+                    </p:column>
+
+                    <p:column headerText="#{label['pessoa.cpf']}"
+                              styleClass="MarRightPerc10">
+                        <h:outputText value="#{usuario.pessoa.cpf}"
+                                      rendered="#{not usuario.pessoa.isPj}" converter="#{cgcCpfConverter}"/>
+                        <h:outputText value="#{usuario.pessoa.cnpj}"
+                                      rendered="#{usuario.pessoa.isPj}" converter="#{cgcCpfConverter}"/>
+                    </p:column>
+
+                    <p:column headerText="#{label['perfil']}"
+                              sortBy="#{usuario.perfil.nome}">
+                        <h:outputText value="#{usuario.perfil.nome}"/>
+                    </p:column>
+
+                    <p:column headerText="#{label['email']}"
+                              sortBy="#{usuario.pessoa.email}">
+                        <h:outputText value="#{usuario.pessoa.email}"/>
+                    </p:column>
+
+                    <p:column headerText="#{label['dataRegistro']}"
+                              sortBy="#{usuario.pessoa.dataRegistro}" style="text-align: center">
+                        <h:outputText value="#{usuario.pessoa.dataRegistro}">
+                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="#{label['acoes']}" styleClass="TexAlCenter">
+                        <p:commandLink title="#{label['detalhar']}" immediate="true"
+                                       update="@form"
+                                       actionListener="#{credenciadaView.detalharUsuarioDesmonte}"
+                                       styleClass="ui-btn Fs15 default-color">
+                            <i class="icon-search Fs17 hardblue"></i>
+                            <pe:selectDetailLevel preserveInputs="@all"/>
+                            <f:setPropertyActionListener target="#{credenciadaView.usuario}"
+                                                         value="#{usuario}"/>
+                            <f:setPropertyActionListener target="#{credenciadaView.editavel}"
+                                                         value="false"/>
+                        </p:commandLink>
+
+                        <p:commandLink title="#{label['editar']}"
+                                       styleClass="ui-btn Fs15 default-color" immediate="true"
+                                       update="@form"
+                                       actionListener="#{credenciadaView.detalharUsuarioDesmonte}"
+                                       rendered="#{p:ifGranted('EDIT_USUARIO_DESMONTE')}">
+                            <i class="icon-edit Fs17 hardblue"></i>
+                            <pe:selectDetailLevel preserveInputs="@all"/>
+                            <f:setPropertyActionListener target="#{credenciadaView.usuario}"
+                                                         value="#{usuario}"/>
+                            <f:setPropertyActionListener target="#{credenciadaView.editavel}"
+                                                         value="true"/>
+                        </p:commandLink>
+
+                        <p:commandLink title="#{label['excluir']}" immediate="true"
+                                       update="@form"
+                                       actionListener="#{credenciadaView.removerUsuarioDesmonte}"
+                                       styleClass="ui-btn Fs15 default-color"
+                                       rendered="#{p:ifGranted('DEL_USUARIO_DESMONTE')}">
+                            <i class="icon-eraser Fs16 red"></i>
+                            <f:setPropertyActionListener target="#{credenciadaView.usuario}"
+                                                         value="#{usuario}"/>
+                            <p:confirm header="#{label['remover']}"
+                                       message="#{label['msg.confirm.remover']}" icon="ui-icon-alert"/>
+                        </p:commandLink>
+                    </p:column>
+
+                    <f:facet name="footer">
+                        <p:commandButton title="#{label['usuario.adicionar']}"
+                                         icon="fa icon-user-add Fs16 white" immediate="true"
+                                         update="@form" value="#{label['usuario.adicionar']}"
+                                         action="#{credenciadaView.prepararNovoUsuario}"
+                                         rendered="#{p:ifGranted('ADD_USUARIO_DESMONTE') and credenciadaView.usuarioDesmonte}">
+                            <pe:selectDetailLevel preserveInputs="@all"/>
+                            <f:setPropertyActionListener target="#{credenciadaView.editavel}"
+                                                         value="true"/>
+                        </p:commandButton>
+                        <p:outputLabel rendered="#{!credenciadaView.usuarioDesmonte}"
+                                       styleClass="red"
+                                       value="Somente DESMONTE possiu permissão para cadastrar usuários desmonte!"/>
+                    </f:facet>
+                </p:dataTable>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="#{label['sim']}"
+                                     styleClass="ui-confirmdialog-yes" icon="fa icon-ok Fs16 white"/>
+                    <p:commandButton value="#{label['nao']}"
+                                     styleClass="ui-confirmdialog-no" icon="fa icon-cancel Fs16 white"/>
+                </p:confirmDialog>
+            </p:fieldset>
+        </div>
+    </div>
+</ui:composition>
