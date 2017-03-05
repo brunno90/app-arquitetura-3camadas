@@ -1,0 +1,65 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <div class="Container100 Responsive">
+        <div class="ContainerIndent">
+            <f:event type="preRenderComponent" listener="#{movimentacaoView.loadLevel1()}"/>
+            <p:fieldset legend="Lista de Movimentações"
+                        styleClass="Responsive">
+                <p:dataTable id="singleDT" var="mov"
+                             value="#{movimentacaoView.list}" rowKey="#{mov.id}" rows="25"
+                             paginator="true" paginatorPosition="bottom"
+                             emptyMessage="#{label['emptyMessage']}" reflow="true">
+
+                    <p:column headerText="#{label['id']}" style="width:40px" styleClass="TexAlCenter">
+                        <h:outputText value="#{mov.id}"/>
+                    </p:column>
+
+                    <p:column headerText="Descricao" style="width:160px"
+                              styleClass="TexAlCenter">
+                        <h:outputText value="#{mov.descricao}"/>
+                    </p:column>
+
+                    <p:column headerText="Titular" style="width:160px"
+                              styleClass="TexAlCenter">
+                        <h:outputText value="#{mov.conta.titular}"/>
+                    </p:column>
+
+                    <p:column headerText="Valor" style="width:160px"
+                              styleClass="TexAlCenter">
+                        <h:outputText value="#{mov.valor}"/>
+                    </p:column>
+
+                    <p:column headerText="Data" style="width:110px" styleClass="TexAlCenter">
+                        <h:outputText value="#{mov.data}">
+                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column style="width:40px" styleClass="TexAlCenter">
+                        <p:commandLink title="#{label['detalhar']}"
+                                       styleClass="ui-btn icon-search Fs15 default-color"
+                                       immediate="true" update="@form">
+                            <pe:selectDetailLevel level="2"/>
+                            <f:setPropertyActionListener target="#{movimentacaoView.entity}"
+                                                         value="#{mov}"/>
+                        </p:commandLink>
+                    </p:column>
+
+                    <f:facet name="footer">
+                        <p:commandButton title="Novo"
+                                         icon="fa icon-plus Fs16 white" immediate="true" update="@form"
+                                         value="Novo"
+                                         actionListener="#{movimentacaoView.createNew}">
+                            <pe:selectDetailLevel level="2"/>
+                        </p:commandButton>
+                    </f:facet>
+                </p:dataTable>
+            </p:fieldset>
+        </div>
+    </div>
+</ui:composition>

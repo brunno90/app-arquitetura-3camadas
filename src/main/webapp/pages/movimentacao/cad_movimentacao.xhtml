@@ -1,0 +1,51 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <div class="Container100 Responsive">
+        <div class="ContainerIndent">
+            <div class="Container100" id="consulta-box">
+                <p:fieldset legend="Movimentação">
+                    <div class="Container90 Fnone MarAuto TexAlCenter TabContent">
+                        <h:panelGrid columns="4" cellpadding="5">
+
+                            <p:outputLabel value="Titular" for="titular"/>
+                            <p:inputText id="titular" value="#{movimentacaoView.entity.conta.titular}"/>
+
+                            <p:outputLabel value="Banco:" for="banco"/>
+                            <p:inputText id="banco" value="#{movimentacaoView.entity.conta.banco}"/>
+
+                            <p:outputLabel value="Agencia" for="agencia"/>
+                            <p:inputText id="agencia" value="#{movimentacaoView.entity.conta.agencia}"/>
+
+                            <p:outputLabel value="Numero Conta" for="numero"/>
+                            <p:inputText id="numero" value="#{movimentacaoView.entity.conta.numero}"/>
+
+
+                            <p:outputLabel value="Data:" for="data"/>
+                            <p:calendar id="data" value="#{movimentacaoView.entity.data}"
+                                        mask="99/99/9999" style="margin-left: 35px;" locale="pt_BR"
+                                        pattern="dd/MM/yyyy" showOn="button"/>
+
+                        </h:panelGrid>
+                    </div>
+                </p:fieldset>
+
+                <p/>
+                <p:fieldset>
+                    <p:commandButton title="#{label['cancelar']}" immediate="true"
+                                     icon="fa icon-cancel Fs16 white" value="#{label['cancelar']}"
+                                     update="@form" style="margin-left:10%" styleClass="redButton">
+                        <pe:selectDetailLevel step="-1"/>
+                    </p:commandButton>
+                    <p:commandButton title="Confirmar" icon="fa icon-ok Fs16 white"
+                                     update="@all" value="Confirmar" style="float:right; margin-right:10%"
+                                     ajax="true" rendered="#{movimentacaoView.entity.id eq null}"
+                                     action="#{movimentacaoView.save()}"/>
+                </p:fieldset>
+            </div>
+        </div>
+    </div>
+</ui:composition>

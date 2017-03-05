@@ -1,9 +1,5 @@
 package br.com.alfa.trabalho.view.comum;
 
-import br.com.alfa.trabalho.model.Usuario;
-import br.com.alfa.trabalho.view.controleAcesso.UserSession;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import javax.el.ELContext;
 import javax.faces.FacesException;
 import javax.faces.application.FacesMessage;
@@ -17,18 +13,11 @@ import java.util.ResourceBundle;
 public abstract class BaseView implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    @Autowired
-    private UserSession session;
-    private Boolean usuarioDesmonte;
-    private boolean validacoesOk;
-
     public Map<String, String> getRequestParameterMap() {
         return FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
     }
 
     public void setErrorMasterDetail(Boolean b) {
-        validacoesOk = !b;
         FacesContext fc = FacesContext.getCurrentInstance();
         ELContext elContext = fc.getELContext();
         SelectLevelListener selectLevelListener;
@@ -85,14 +74,6 @@ public abstract class BaseView implements Serializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public UserSession getSession() {
-        return session;
-    }
-
-    public Usuario getUsuarioLogado() {
-        return session.getUsuario();
     }
 
 }
