@@ -29,9 +29,24 @@
                         <h:outputText value="#{mov.conta.titular}"/>
                     </p:column>
 
+                    <p:column headerText="Banco" style="width:160px"
+                              styleClass="TexAlCenter">
+                        <h:outputText value="#{mov.conta.banco}"/>
+                    </p:column>
+
+                    <p:column headerText="Conta" style="width:160px"
+                              styleClass="TexAlCenter">
+                        <h:outputText value="#{mov.conta.agencia} - #{mov.conta.numero} "/>
+                    </p:column>
+
                     <p:column headerText="Valor" style="width:160px"
                               styleClass="TexAlCenter">
                         <h:outputText value="#{mov.valor}"/>
+                    </p:column>
+
+                    <p:column headerText="Tipo Movimentação" style="width:160px"
+                              styleClass="TexAlCenter">
+                        <h:outputText value="#{mov.tipoMovimentacao}"/>
                     </p:column>
 
                     <p:column headerText="Data" style="width:110px" styleClass="TexAlCenter">

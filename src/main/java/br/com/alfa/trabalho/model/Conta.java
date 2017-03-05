@@ -62,5 +62,11 @@ public class Conta extends AbstractModel {
         this.agencia = agencia;
     }
 
+    public String getEndereco() {
+        return endereco;
+    }
 
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
 }

@@ -2,7 +2,7 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:pe="http://primefaces.org/ui/extensions">
+                xmlns:pe="http://primefaces.org/ui/extensions" xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <div class="Container100 Responsive">
         <div class="ContainerIndent">
@@ -23,11 +23,20 @@
                             <p:outputLabel value="Numero Conta" for="numero"/>
                             <p:inputText id="numero" value="#{movimentacaoView.entity.conta.numero}"/>
 
+                            <p:outputLabel value="Descrição" for="numero"/>
+                            <p:inputText id="desc" value="#{movimentacaoView.entity.descricao}"/>
+
+                            <p:outputLabel value="Valor" for="numero"/>
+                            <p:inputText id="valor" value="#{movimentacaoView.entity.valor}"/>
 
                             <p:outputLabel value="Data:" for="data"/>
                             <p:calendar id="data" value="#{movimentacaoView.entity.data}"
                                         mask="99/99/9999" style="margin-left: 35px;" locale="pt_BR"
                                         pattern="dd/MM/yyyy" showOn="button"/>
+
+                            <h:selectOneMenu id="tpMov" value="#{movimentacaoView.entity.tipoMovimentacao}">
+                                <f:selectItems value="#{movimentacaoView.getTipoMov}"/>
+                            </h:selectOneMenu>
 
                         </h:panelGrid>
                     </div>

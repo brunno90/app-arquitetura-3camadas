@@ -2,6 +2,7 @@ package br.com.alfa.trabalho.view;
 
 
 import br.com.alfa.trabalho.model.Movimentacao;
+import br.com.alfa.trabalho.model.TipoMovimentacao;
 import br.com.alfa.trabalho.service.MovimentacaoService;
 import br.com.alfa.trabalho.view.comum.BaseView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -75,7 +77,9 @@ public class MovimentacaoView extends BaseView {
             System.out.println(ex.getMessage());
         }
     }
-
+    public TipoMovimentacao[] getTipoMov(){
+        return TipoMovimentacao.values();
+    }
     public Movimentacao getEntity() {
         return entity;
     }
