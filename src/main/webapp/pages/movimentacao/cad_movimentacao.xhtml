@@ -34,9 +34,10 @@
                                         mask="99/99/9999" style="margin-left: 35px;" locale="pt_BR"
                                         pattern="dd/MM/yyyy" showOn="button"/>
 
-                            <h:selectOneMenu id="tpMov" value="#{movimentacaoView.entity.tipoMovimentacao}">
-                                <f:selectItems value="#{movimentacaoView.getTipoMov}"/>
-                            </h:selectOneMenu>
+                            <p:outputLabel value="Tipo Movimentação:" for="data"/>
+                            <p:selectOneMenu id="tpMov" value="#{movimentacaoView.entity.tipoMovimentacao}">
+                                <f:selectItems value="#{movimentacaoView.tipoMov}"/>
+                            </p:selectOneMenu>
 
                         </h:panelGrid>
                     </div>

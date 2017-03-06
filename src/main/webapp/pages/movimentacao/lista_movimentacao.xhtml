@@ -19,43 +19,29 @@
                         <h:outputText value="#{mov.id}"/>
                     </p:column>
 
-                    <p:column headerText="Descricao" style="width:160px"
-                              styleClass="TexAlCenter">
+                    <p:column headerText="Descricao" styleClass="TexAlCenter">
                         <h:outputText value="#{mov.descricao}"/>
                     </p:column>
 
-                    <p:column headerText="Titular" style="width:160px"
-                              styleClass="TexAlCenter">
+                    <p:column headerText="Titular" styleClass="TexAlCenter">
                         <h:outputText value="#{mov.conta.titular}"/>
                     </p:column>
 
-                    <p:column headerText="Banco" style="width:160px"
-                              styleClass="TexAlCenter">
-                        <h:outputText value="#{mov.conta.banco}"/>
-                    </p:column>
-
-                    <p:column headerText="Conta" style="width:160px"
-                              styleClass="TexAlCenter">
-                        <h:outputText value="#{mov.conta.agencia} - #{mov.conta.numero} "/>
-                    </p:column>
-
-                    <p:column headerText="Valor" style="width:160px"
-                              styleClass="TexAlCenter">
+                    <p:column headerText="Valor" styleClass="TexAlCenter">
                         <h:outputText value="#{mov.valor}"/>
                     </p:column>
 
-                    <p:column headerText="Tipo Movimentação" style="width:160px"
-                              styleClass="TexAlCenter">
+                    <p:column headerText="Tipo Movimentação" styleClass="TexAlCenter">
                         <h:outputText value="#{mov.tipoMovimentacao}"/>
                     </p:column>
 
-                    <p:column headerText="Data" style="width:110px" styleClass="TexAlCenter">
+                    <p:column headerText="Data" styleClass="TexAlCenter">
                         <h:outputText value="#{mov.data}">
                             <f:convertDateTime pattern="dd/MM/yyyy"/>
                         </h:outputText>
                     </p:column>
 
-                    <p:column style="width:40px" styleClass="TexAlCenter">
+                    <p:column styleClass="TexAlCenter">
                         <p:commandLink title="#{label['detalhar']}"
                                        styleClass="ui-btn icon-search Fs15 default-color"
                                        immediate="true" update="@form">

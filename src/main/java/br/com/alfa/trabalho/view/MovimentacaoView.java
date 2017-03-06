@@ -1,6 +1,7 @@
 package br.com.alfa.trabalho.view;
 
 
+import br.com.alfa.trabalho.model.Conta;
 import br.com.alfa.trabalho.model.Movimentacao;
 import br.com.alfa.trabalho.model.TipoMovimentacao;
 import br.com.alfa.trabalho.service.MovimentacaoService;
@@ -10,7 +11,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -33,6 +33,7 @@ public class MovimentacaoView extends BaseView {
     @PostConstruct
     public void createNew() {
         entity = new Movimentacao();
+        entity.setConta(new Conta());
         list = new ArrayList<>();
         connect();
     }
@@ -40,8 +41,8 @@ public class MovimentacaoView extends BaseView {
     public void loadLevel1() {
         try {
             try {
-                Registry registroCompras = LocateRegistry.getRegistry("localhost", 5001);
-                service = (MovimentacaoService) registroCompras.lookup("movimentacao");
+                Registry registry = LocateRegistry.getRegistry("localhost", 5001);
+                service = (MovimentacaoService) registry.lookup("movimentacao");
                 list = service.findAll();
             } catch (RemoteException | NotBoundException e) {
                 e.printStackTrace();
@@ -55,8 +56,8 @@ public class MovimentacaoView extends BaseView {
     public void save() {
         try {
             try {
-                Registry registroCompras = LocateRegistry.getRegistry("localhost", 5001);
-                service = (MovimentacaoService) registroCompras.lookup("movimentacao");
+                Registry registry = LocateRegistry.getRegistry("localhost", 5001);
+                service = (MovimentacaoService) registry.lookup("movimentacao");
                 service.save(entity);
                 addMessageWARN("Movimentação Salva!");
             } catch (RemoteException | NotBoundException e) {
@@ -77,9 +78,11 @@ public class MovimentacaoView extends BaseView {
             System.out.println(ex.getMessage());
         }
     }
-    public TipoMovimentacao[] getTipoMov(){
+
+    public TipoMovimentacao[] getTipoMov() {
         return TipoMovimentacao.values();
     }
+
     public Movimentacao getEntity() {
         return entity;
     }
